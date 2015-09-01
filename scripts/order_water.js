@@ -2,6 +2,9 @@
   Description:
     Create an order for water to office.
 
+  Commands:
+    hubot закажи воду - Makes and order by sending template email to water dealer
+
   Dependencies:
     * mandrill-api
 
@@ -13,9 +16,6 @@
     WATER_ORDER_ADMIN_EMAIL
     WATER_ORDER_ADMIN_NAME
     MANDRILL_WATER_ORDER_TEMPLATE
-
-  Commands:
-    hubot закажи воду
 */
 
 var DEFAULT_WATER_ORDER_INTERVAL = 5*24*60*60; // 5 days in seconds
