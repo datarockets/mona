@@ -24,7 +24,7 @@ var mandrillApi = require('mandrill-api/mandrill');
 var Mandrill = new mandrillApi.Mandrill(process.env.MANDRILL_KEY);
 
 var passedEnoughTimeFromLastOrder = function (robot) {
-  var lastWaterOrder = robot.brain.get('LastWaterOrderCreatedAt');
+  var lastWaterOrder = new Date(robot.brain.get('LastWaterOrderCreatedAt'));
 
   if (lastWaterOrder) {
     var currentDate = new Date();
