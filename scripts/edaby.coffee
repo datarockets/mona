@@ -18,10 +18,10 @@
 ###
 
 URL = 'http://eda.by/api.php'
-CLIENT_NAME = 'Х'
-CLIENT_EMAIL = 'Х'
-CLIENT_PHONE = '+375+(ХХ)+ХХХ-ХХ-ХХ'
-CLIENT_ADDRESS = 'Х'
+CLIENT_NAME = process.env.CLIENT_NAME
+CLIENT_EMAIL = process.env.CLIENT_EMAIL
+CLIENT_PHONE =  process.env.CLIENT_PHONE # In format '+375+(ХХ)+ХХХ-ХХ-ХХ'
+CLIENT_ADDRESS = process.env.CLIENT_ADDRESS
 
 module.exports = (robot) ->
 
