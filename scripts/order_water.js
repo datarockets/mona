@@ -66,7 +66,7 @@ var sendOrderToWaterDealer = function (robot, successCallback, errorCallback) {
       robot.brain.set('LastWaterOrderCreatedAt', new Date());
       successCallback();
     },
-    function (erorr) {
+    function (error) {
       console.log(error);
       errorCallback();
     }
