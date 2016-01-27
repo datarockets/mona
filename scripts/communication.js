@@ -13,6 +13,7 @@ var handlerCommunication = function(robot, queries, answers) {
 };
 
 module.exports = function (robot) {
+  handlerCommunication(robot, ['\^@mona\$'], ['м?)', 'я тут)', 'yeap?)']);
   handlerCommunication(robot, ['\\(╯°□°\）╯︵ ┻━┻'], ['┬─┬ノ( º _ ºノ) Calm down, bro.']);
-  handlerCommunication(robot, ['Доброе утро', 'Утро', 'Доброго утра', 'Good morning'], ['Доброе... :smiley', 'Привет!!! :smiley', 'И тебе! :smiley', 'Morning, bro :smiley'])
+  handlerCommunication(robot, ['Утро', 'Доброго утра', 'Good morning'], ['Доброе... :smiley:', 'Привет!!! :smiley:', 'И тебе! :smiley:', 'Morning, bro :smiley:'])
 };
