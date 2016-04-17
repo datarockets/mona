@@ -12,7 +12,7 @@
     "hubot-redis-brain": "0.0.3",
     "hubot-scripts": "^2.16.2",
     "hubot-slack": "^3.3.0",
-    "mandrill-api": "^1.0.45"
+    "sendgrid": "^2.0.0"
   },
   "engines": {
     "node": "0.10.x"

@@ -9,19 +9,52 @@
     * mandrill-api
 
   Configuration:
-    MANDRILL_KEY
+    SENDGRID_KEY
     WATER_ORDER_MIN_INTERVAL
     WATER_ORDER_RECIPIENT_EMAIL
     WATER_ORDER_RECIPIENT_NAME
     WATER_ORDER_ADMIN_EMAIL
     WATER_ORDER_ADMIN_NAME
-    MANDRILL_WATER_ORDER_TEMPLATE
+    SENDGRID_WATER_ORDER_TEMPLATE
 */
 
 var DEFAULT_WATER_ORDER_INTERVAL = 5*24*60*60; // 5 days in seconds
 
-var mandrillApi = require('mandrill-api/mandrill');
-var Mandrill = new mandrillApi.Mandrill(process.env.MANDRILL_KEY);
+var sendgrid = require('sendgrid')(process.env.SENDGRID_KEY);
+
+var sendOrderToWaterDealer = function (robot, successCallback, errorCallback) {
+  var message = {
+    "to": process.env.WATER_ORDER_RECIPIENT_EMAIL,
+    "toname": process.env.WATER_ORDER_RECIPIENT_NAME,
+    "from": process.env.WATER_ORDER_ADMIN_EMAIL,
+    "fromname": process.env.WATER_ORDER_ADMIN_NAME,
+    "cc": process.env.WATER_ORDER_ADMIN_EMAIL,
+    "subject": " ",
+    "text": " "
+  }
+
+  var email = new sendgrid.Email(message);
+  email.setFilters({
+    "templates": {
+      "settings": {
+        "enable": 1,
+        "template_id": process.env.SENDGRID_WATER_ORDER_TEMPLATE
+      }
+    }
+  });
+
+  sendgrid.send(email, function(error, result) {
+    console.log(result);
+    if (error) {
+      console.log(error);
+      errorCallback();
+    }
+    else {
+      robot.brain.set('LastWaterOrderCreatedAt', new Date());
+      successCallback();
+    }
+  });
+};
 
 var passedEnoughTimeFromLastOrder = function (robot) {
   var lastWaterOrder = new Date(robot.brain.get('LastWaterOrderCreatedAt'));
@@ -38,40 +71,6 @@ var passedEnoughTimeFromLastOrder = function (robot) {
   else {
     return(true);
   }
-};
-
-var sendOrderToWaterDealer = function (robot, successCallback, errorCallback) {
-  var message = {
-    "to": [
-      {
-        "email": process.env.WATER_ORDER_RECIPIENT_EMAIL,
-        "name": process.env.WATER_ORDER_RECIPIENT_NAME,
-        "type": "to"
-      },
-      {
-        "email": process.env.WATER_ORDER_ADMIN_EMAIL,
-        "name": process.env.WATER_ORDER_ADMIN_NAME,
-        "type": "cc"
-      }
-    ]
-  };
-  Mandrill.messages.sendTemplate(
-    {
-      "template_name": process.env.MANDRILL_WATER_ORDER_TEMPLATE,
-      "template_content": [],
-      "message": message
-    },
-    function (success) {
-      console.log(success);
-      robot.brain.set('LastWaterOrderCreatedAt', new Date());
-      successCallback();
-    },
-    function (error) {
-      console.log(error);
-      errorCallback();
-    }
-  );
-  console.log('done');
 };
 
 var respondWithOrderConfirmation = function (response) {
