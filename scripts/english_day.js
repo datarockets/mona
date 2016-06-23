@@ -19,7 +19,7 @@ var answers = [
 ];
 
 module.exports = function (robot) {
-  robot.hear(new RegExp('[\wа-я]', 'i'), function(response) {
+  robot.hear(new RegExp('[а-я]', 'i'), function(response) {
     var currentDayOfWeek = moment(new Date()).day();
     if(process.env.ENGLISH_DAY_OF_WEEK == currentDayOfWeek) {
       response.reply(answers[Math.floor(Math.random() * answers.length)]);
