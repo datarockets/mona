@@ -12,10 +12,10 @@
 var moment = require('moment');
 
 var answers = [
-  'Man, it is fucken English Thursday Today!',
+  'Man, it is  English Thursday Today',
   'I told you, dude, speak English pls',
-  'One more fucken Russian word and I\'ll kill myself',
-  'Nobody understands your fucken Russian during our cool English day'
+  'Who can understand your Russian during our cool English day?',
+  'It doesn\'t work - speak English please'
 ];
 
 module.exports = function (robot) {
