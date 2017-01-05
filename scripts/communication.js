@@ -4,6 +4,8 @@
    If somebody in chat write appropriate query, mona will answer him a random response for this query.
 */
 
+var moment = require('moment');
+
 var handlerCommunication = function(robot, queries, answers) {
   queries.forEach(function(query) {
     robot.hear(new RegExp(query, 'i'), function (response) {
