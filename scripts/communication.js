@@ -13,7 +13,14 @@ var handlerCommunication = function(robot, queries, answers) {
 };
 
 module.exports = function (robot) {
-  handlerCommunication(robot, ['\^@mona\$'], ['м?)', 'я тут)', 'yeap?)']);
-  handlerCommunication(robot, ['\\(╯°□°\）╯︵ ┻━┻'], ['┬─┬ノ( º _ ºノ) Calm down, bro.']);
-  handlerCommunication(robot, ['Доброго утра', 'Good morning'], ['Доброе... :smiley:', 'Привет!!! :smiley:', 'И тебе! :smiley:', 'Morning, bro :smiley:'])
+  var isEnglishDay = moment(new Date()).day() == process.env.ENGLISH_DAY_OF_WEEK;
+  if(isEnglishDay) {
+    handlerCommunication(robot, ['\^@mona\$'], ['whazzzup bro?', 'how can I help?', 'yeap?)']);
+    handlerCommunication(robot, ['Hello', 'Good morning', 'Hi, team!'],
+      ['Hey, dude!', 'Good morning in our English day!', 'Whatzzzup, bro :smiley:', 'Morning, bro :smiley:']);
+  } else {
+    handlerCommunication(robot, ['\^@mona\$'], ['м?)', 'я тут)', 'yeap?)']);
+    handlerCommunication(robot, ['Доброго утра', 'Good morning', 'Привет'],
+      ['Доброе... :smiley:', 'Привет! :smiley:', 'И тебе! :smiley:', 'Morning, bro :smiley:', 'Привет! Как дела?']);
+  }
 };
