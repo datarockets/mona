@@ -10,6 +10,7 @@
 
 */
 var moment = require('moment');
+var utils = require('./utils');
 
 var answers = [
   'Man, it is  English Thursday Today',
@@ -18,11 +19,15 @@ var answers = [
   'It doesn\'t work - speak English please'
 ];
 
+var isNotScreenShotName = function (message) {
+  return message.text.match(/^(Снимок экрана ([0-9]|\-){10} в ([0-9]|\.){8})$/) === null
+};
+
 module.exports = function (robot) {
   robot.hear(new RegExp('[а-я]', 'i'), function(response) {
-    var currentDayOfWeek = moment(new Date()).day();
-    if(process.env.ENGLISH_DAY_OF_WEEK == currentDayOfWeek) {
-      response.reply(answers[Math.floor(Math.random() * answers.length)]);
+    var isItNotLegal = utils.isEnglishDay() && isNotScreenShotName(response.message);
+    if (isItNotLegal) {
+      response.reply(response.random(answers));
     }
   });
 };
