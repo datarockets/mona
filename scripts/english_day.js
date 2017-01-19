@@ -9,7 +9,6 @@
     ENGLISH_DAY_OF_WEEK
 
 */
-var moment = require('moment');
 var utils = require('./utils');
 
 var answers = [

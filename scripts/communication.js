@@ -4,7 +4,6 @@
    If somebody in chat write appropriate query, mona will answer him a random response for this query.
 */
 
-var moment = require('moment');
 var utils = require('./utils');
 
 var handlerCommunication = function(robot, queries, answers) {
