@@ -4,7 +4,7 @@
    If somebody in chat write appropriate query, mona will answer him a random response for this query.
 */
 
-var moment = require('moment');
+var utils = require('./utils');
 
 var handlerCommunication = function(robot, queries, answers) {
   queries.forEach(function(query) {
@@ -15,8 +15,7 @@ var handlerCommunication = function(robot, queries, answers) {
 };
 
 module.exports = function (robot) {
-  var isEnglishDay = moment(new Date()).day() == process.env.ENGLISH_DAY_OF_WEEK;
-  if(isEnglishDay) {
+  if(utils.isEnglishDay()) {
     handlerCommunication(robot, ['\^@mona\$'], ['whazzzup bro?', 'how can I help?', 'yeap?)']);
     handlerCommunication(robot, ['Hello', 'Good morning', 'Hi, team!'],
       ['Hey, dude!', 'Good morning in our English day!', 'Whatzzzup, bro :smiley:', 'Morning, bro :smiley:']);
