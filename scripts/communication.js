@@ -6,6 +6,10 @@
 
 var utils = require('./utils');
 
+var englishGreetings = ['Hello', 'Good morning', 'Hi, team!'],
+    russianGreetings = ['Доброго утра', 'Доброе утро', 'Привет'],
+    greetings = russianGreetings.concat(englishGreetings);
+
 var handlerCommunication = function(robot, queries, answers) {
   queries.forEach(function(query) {
     robot.hear(new RegExp(query, 'i'), function (response) {
@@ -17,11 +21,11 @@ var handlerCommunication = function(robot, queries, answers) {
 module.exports = function (robot) {
   if(utils.isEnglishDay()) {
     handlerCommunication(robot, ['\^@mona\$'], ['whazzzup bro?', 'how can I help?', 'yeap?)']);
-    handlerCommunication(robot, ['Hello', 'Good morning', 'Hi, team!'],
+    handlerCommunication(robot, englishGreetings,
       ['Hey, dude!', 'Good morning in our English day!', 'Whatzzzup, bro :smiley:', 'Morning, bro :smiley:']);
   } else {
     handlerCommunication(robot, ['\^@mona\$'], ['м?)', 'я тут)', 'yeap?)']);
-    handlerCommunication(robot, ['Доброго утра', 'Good morning', 'Привет'],
+    handlerCommunication(robot, greetings,
       ['Доброе... :smiley:', 'Привет! :smiley:', 'И тебе! :smiley:', 'Morning, bro :smiley:', 'Привет! Как дела?']);
   }
 };
