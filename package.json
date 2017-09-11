@@ -13,7 +13,7 @@
     "hubot-redis-brain": "0.0.3",
     "hubot-schedule": "~0.6.1",
     "hubot-scripts": "^2.16.2",
-    "hubot-slack": "^3.3.0",
+    "hubot-slack": "^4.2.2",
     "sendgrid": "^2.0.0",
     "moment": "^2.13.0"
   },
