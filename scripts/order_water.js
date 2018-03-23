@@ -1,106 +1,124 @@
-/*
-  Description:
-    Create an order for water to office.
+/* eslint-disable no-useless-escape */
+//
+// Description:
+//   Create an order for water to office.
+//
+// Commands:
+//   hubot закажи воду - Makes and order by sending template email to water dealer
+//
+// Dependencies:
+//   * mandrill-api
+//
+// Configuration:
+//   SENDGRID_KEY
+//   WATER_ORDER_MIN_INTERVAL
+//   WATER_ORDER_RECIPIENT_EMAIL
+//   WATER_ORDER_RECIPIENT_NAME
+//   WATER_ORDER_ADMIN_EMAIL
+//   WATER_ORDER_ADMIN_NAME
+//   SENDGRID_WATER_ORDER_TEMPLATE
 
-  Commands:
-    hubot закажи воду - Makes and order by sending template email to water dealer
+const utils = require('./utils');
 
-  Dependencies:
-    * mandrill-api
+const DEFAULT_WATER_ORDER_INTERVAL = 5 * 24 * 60 * 60; // 5 days in seconds
 
-  Configuration:
-    SENDGRID_KEY
-    WATER_ORDER_MIN_INTERVAL
-    WATER_ORDER_RECIPIENT_EMAIL
-    WATER_ORDER_RECIPIENT_NAME
-    WATER_ORDER_ADMIN_EMAIL
-    WATER_ORDER_ADMIN_NAME
-    SENDGRID_WATER_ORDER_TEMPLATE
-*/
+const sendgrid = require('sendgrid')(process.env.SENDGRID_KEY);
 
-var DEFAULT_WATER_ORDER_INTERVAL = 5*24*60*60; // 5 days in seconds
+const sendOrderToWaterDealer = (robot, successCallback, errorCallback) => {
+  const message = {
+    to: process.env.WATER_ORDER_RECIPIENT_EMAIL,
+    toname: process.env.WATER_ORDER_RECIPIENT_NAME,
+    from: process.env.WATER_ORDER_ADMIN_EMAIL,
+    fromname: process.env.WATER_ORDER_ADMIN_NAME,
+    cc: process.env.WATER_ORDER_ADMIN_EMAIL,
+    subject: ' ',
+    text: ' ',
+  };
 
-var sendgrid = require('sendgrid')(process.env.SENDGRID_KEY);
-
-var sendOrderToWaterDealer = function (robot, successCallback, errorCallback) {
-  var message = {
-    "to": process.env.WATER_ORDER_RECIPIENT_EMAIL,
-    "toname": process.env.WATER_ORDER_RECIPIENT_NAME,
-    "from": process.env.WATER_ORDER_ADMIN_EMAIL,
-    "fromname": process.env.WATER_ORDER_ADMIN_NAME,
-    "cc": process.env.WATER_ORDER_ADMIN_EMAIL,
-    "subject": " ",
-    "text": " "
-  }
-
-  var email = new sendgrid.Email(message);
+  const email = new sendgrid.Email(message);
   email.setFilters({
-    "templates": {
-      "settings": {
-        "enable": 1,
-        "template_id": process.env.SENDGRID_WATER_ORDER_TEMPLATE
-      }
-    }
+    templates: {
+      settings: {
+        enable: 1,
+        template_id: process.env.SENDGRID_WATER_ORDER_TEMPLATE,
+      },
+    },
   });
 
-  sendgrid.send(email, function(error, result) {
+  sendgrid.send(email, (error, result) => {
     console.log(result);
     if (error) {
       console.log(error);
       errorCallback();
-    }
-    else {
+    } else {
       robot.brain.set('LastWaterOrderCreatedAt', new Date());
       successCallback();
     }
   });
 };
 
-var passedEnoughTimeFromLastOrder = function (robot) {
-  var lastWaterOrder = new Date(robot.brain.get('LastWaterOrderCreatedAt'));
-
+const passedEnoughTimeFromLastOrder = (robot) => {
+  const lastWaterOrder = new Date(robot.brain.get('LastWaterOrderCreatedAt'));
   if (lastWaterOrder) {
-    var currentDate = new Date();
-    if ((currentDate - lastWaterOrder) / 1000 > (process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_INTERVAL)) {
-      return(true);
+    const currentDate = new Date();
+    if ((currentDate - lastWaterOrder) / 1000 >
+    (process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_INTERVAL)) {
+      return (true);
     }
-    else {
-      return(false);
-    }
+    return (false);
   }
-  else {
-    return(true);
+  return (true);
+};
+
+const respondWithOrderConfirmation = (response) => {
+  const possibleRepliesRussian = ['Хорошо.', 'Ок.', 'Закажу.', 'Да, сэр :guardsman:', 'Готово :white_check_mark:.'];
+  const possibleRepliesEnglish = ['Good.', 'Ok.', 'I will!', 'Yes, sir! :guardsman:', 'Done :white_check_mark:.'];
+  if (utils.isEnglishDay()) {
+    response.reply(response.random(possibleRepliesEnglish));
+  } else {
+    response.reply(response.random(possibleRepliesRussian));
   }
 };
 
-var respondWithOrderConfirmation = function (response) {
-  var possibleReplies = ['Хорошо.', 'Ок.', 'Закажу.', 'Yes sir! :guardsman:', 'Done :white_check_mark:.'];
-  response.reply(response.random(possibleReplies));
+const respondWithOrderSendingError = (response) => {
+  if (utils.isEnglishDay()) {
+    response.reply('Something went wrong and request hasn\'t been sent. :non-potable_water:');
+  } else {
+    response.reply('Произошла ошибка и запрос не отправился. :non-potable_water:');
+  }
 };
 
-var respondWithOrderSendingError = function (response) {
-  response.reply('Произошла ошибка и запрос не отправился. :non-potable_water:');
+const respondWithTooMuchOrdersError = (response, robot) => {
+  if (utils.isEnglishDay()) {
+    response.reply(`:non-potable_water:. You can't send water that often.\
+    Last time I ordered it ${robot.brain.get('LastWaterOrderCreatedAt')}`);
+  } else {
+    response.reply(`:non-potable_water:. Нельзя заказывать воду слишком часто.\
+    В последний раз я заказывала воду ${robot.brain.get('LastWaterOrderCreatedAt')}`);
+  }
 };
 
-// TODO: Show error with useful information about when next order can be done.
-var respondWithTooMuchOrdersError = function (response) {
-  response.reply(':non-potable_water:. Нельзя заказывать воду слишком часто.');
-};
-
-module.exports = function (robot) {
-  robot.respond(/закажи воду/i, function (response) {
-    if (passedEnoughTimeFromLastOrder(robot)) {
-      sendOrderToWaterDealer(
-        robot,
-        function () {
-          respondWithOrderConfirmation(response);
-        },
-        function () {
-          respondWithOrderSendingError(response);
-        });
-    }
-    else {
-      respondWithTooMuchOrdersError(response);
-    }
+const handlerCommunication = (robot, queries) => {
+  queries.forEach((query) => {
+    robot.hear(new RegExp(`^${query}$`, 'i'), (response) => {
+      if (passedEnoughTimeFromLastOrder(robot)) {
+        sendOrderToWaterDealer(
+          robot,
+          () => {
+            respondWithOrderConfirmation(response);
+          },
+          () => {
+            respondWithOrderSendingError(response);
+          },
+        );
+      } else {
+        respondWithTooMuchOrdersError(response, robot);
+      }
+    });
   });
+};
+
+// This one triggers ONLY on those phrases
+module.exports = (robot) => {
+  handlerCommunication(robot, ['@mona закажи воду', '@mona order water']);
 };

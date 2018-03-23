@@ -14,10 +14,18 @@
     "hubot-schedule": "~0.6.1",
     "hubot-scripts": "^2.16.2",
     "hubot-slack": "^4.2.2",
-    "sendgrid": "^2.0.0",
-    "moment": "^2.13.0"
+    "moment": "^2.13.0",
+    "moment-timezone": "^0.5.14",
+    "sendgrid": "^2.0.0"
   },
   "engines": {
     "node": "4.8.4"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0"
   }
 }

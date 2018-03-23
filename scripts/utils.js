@@ -1,8 +1,8 @@
-var moment = require('moment');
+const moment = require('moment-timezone');
 
 module.exports = {
-  isEnglishDay: function() {
-    var currentDayOfWeek = moment(new Date()).day();
-    return process.env.ENGLISH_DAY_OF_WEEK == currentDayOfWeek;
+  isEnglishDay: () => {
+    const currentDayOfWeek = moment().tz('Europe/Minsk').day();
+    return process.env.ENGLISH_DAY_OF_WEEK === currentDayOfWeek;
   },
 };
