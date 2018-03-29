@@ -13,7 +13,6 @@ const greetings = russianGreetings.concat(englishGreetings);
 const handlerCommunication = (robot, queries, answers) => {
   queries.forEach((query) => {
     robot.hear(new RegExp(query, 'i'), (response) => {
-      response.send('WORKED ON: ', new RegExp(query, 'i'));
       response.send(response.random(answers));
     });
   });
