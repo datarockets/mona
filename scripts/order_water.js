@@ -109,7 +109,7 @@ const handlerCommunication = (robot, queries) => {
           },
           () => {
             respondWithOrderSendingError(response);
-          },
+          }
         );
       } else {
         respondWithTooMuchOrdersError(response, robot);
