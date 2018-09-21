@@ -18,8 +18,6 @@
 //   WATER_ORDER_ADMIN_NAME
 //   SENDGRID_WATER_ORDER_TEMPLATE
 
-const utils = require('./utils');
-
 const DEFAULT_WATER_ORDER_INTERVAL = 5 * 24 * 60 * 60; // 5 days in seconds
 
 const sendgrid = require('sendgrid')(process.env.SENDGRID_KEY);
@@ -71,31 +69,26 @@ const passedEnoughTimeFromLastOrder = (robot) => {
 };
 
 const respondWithOrderConfirmation = (response) => {
-  const possibleRepliesRussian = ['Хорошо.', 'Ок.', 'Закажу.', 'Да, сэр :guardsman:', 'Готово :white_check_mark:.'];
-  const possibleRepliesEnglish = ['Good.', 'Ok.', 'I will!', 'Yes, sir! :guardsman:', 'Done :white_check_mark:.'];
-  if (utils.isEnglishDay()) {
-    response.reply(response.random(possibleRepliesEnglish));
-  } else {
-    response.reply(response.random(possibleRepliesRussian));
-  }
+  const possibleReplies = ['Хорошо.', 'Ок.', 'Закажу.', 'Да, сэр :guardsman:', 'Готово :white_check_mark:.',
+    'Good.', 'Ok.', 'I will!', 'Yes, sir! :guardsman:', 'Done :white_check_mark:.'];
+  response.reply(response.random(possibleReplies));
+  
 };
 
 const respondWithOrderSendingError = (response) => {
-  if (utils.isEnglishDay()) {
-    response.reply('Something went wrong and request hasn\'t been sent. :non-potable_water:');
-  } else {
-    response.reply('Произошла ошибка и запрос не отправился. :non-potable_water:');
-  }
+  const possibleReplies = ['Something went wrong and request hasn\'t been sent. :non-potable_water:',
+    'Произошла ошибка и запрос не отправился. :non-potable_water:'];
+  response.reply(response.random(possibleReplies));
 };
 
 const respondWithTooMuchOrdersError = (response, robot) => {
-  if (utils.isEnglishDay()) {
-    response.reply(`:non-potable_water:. You can't send water that often.\
-    Last time I ordered it ${robot.brain.get('LastWaterOrderCreatedAt')}`);
-  } else {
-    response.reply(`:non-potable_water:. Нельзя заказывать воду слишком часто.\
-    В последний раз я заказывала воду ${robot.brain.get('LastWaterOrderCreatedAt')}`);
-  }
+  const possibleReplies = [
+    `:non-potable_water:. You can't send water that often.\
+      Last time I ordered it ${robot.brain.get('LastWaterOrderCreatedAt')}`,
+    `:non-potable_water:. Нельзя заказывать воду слишком часто.\
+      В последний раз я заказывала воду ${robot.brain.get('LastWaterOrderCreatedAt')}`
+  ];
+  response.reply(response.random(possibleReplies));
 };
 
 const handlerCommunication = (robot, queries) => {
