@@ -15,9 +15,11 @@
     "debug": "^2.3.3",
     "express": "^4.14.0",
     "express-hbs": "^1.0.4",
+    "lodash": "^4.17.11",
     "node-env-file": "^0.1.8",
     "querystring": "^0.2.0",
     "request": "^2.79.0",
+    "sendgrid": "^5.2.3",
     "wordfilter": "^0.2.6"
   },
   "devDependencies": {},

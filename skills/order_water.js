@@ -24,11 +24,11 @@ const sendOrder = () => new Promise((resolve, reject) => {
     },
   });
 
-  sendgrid.send(email, (error) => {
+  sendgrid.send(email, (error, result) => {
     if (error) {
-      reject()
+      reject(error)
     } else {
-      resolve()
+      resolve(result)
     }
   });
 })
@@ -42,6 +42,12 @@ const register = (controller) => {
 
   controller.hears(waterOrderingMessages, reactMessageKinds, (mona, message) => {
     sendOrder()
+      .then(() => {
+        mona.reply('Done!')
+      })
+      .catch(() => {
+        mona.reply('Ooops...')
+      })
   })
 }
 
