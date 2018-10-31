@@ -1,8 +1,37 @@
+const DEFAULT_WATER_ORDER_INTERVAL = 5 * 24 * 60 * 60
+
 const greetingMessages = ['^say (.*)', '^say']
 const waterOrderingMessages = ['^закажи воду$', '^order water$']
 const reactMessageKinds = ['direct_message', 'direct_mention']
 
-const sendOrder = () => new Promise((resolve, reject) => {
+
+const passedEnoughTimeFromLastOrder = (createdAt) => {
+  const lastWaterOrder = new Date(createdAt)
+  const currentDate = new Date()
+  const minInterval = process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_MIN_INTERVAL
+  const currentIntercal = (currentDate - lastWaterOrder) / 1000
+  const isEnough = currentIntercal > minInterval
+
+  if (lastWaterOrder && isEnough) {
+    return true
+  }
+
+  if (!lastWaterOrder) {
+    return true
+  }
+
+  return false
+};
+
+const makeOrder = () => new Promise((_resolve, reject) => {
+  if (passedEnoughTimeFromLastOrder()) {
+    return sendEmail()
+  } else {
+    return reject()
+  }
+})
+
+const sendEmail = () => new Promise((resolve, reject) => {
   const message = {
     to: process.env.WATER_ORDER_RECIPIENT_EMAIL,
     toname: process.env.WATER_ORDER_RECIPIENT_NAME,
@@ -41,7 +70,7 @@ const register = (controller) => {
   })
 
   controller.hears(waterOrderingMessages, reactMessageKinds, (mona, message) => {
-    sendOrder()
+    makeOrder()
       .then(() => {
         mona.reply('Done!')
       })
