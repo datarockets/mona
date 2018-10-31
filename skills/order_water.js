@@ -1,12 +1,50 @@
-const DEFAULT_WATER_ORDER_INTERVAL = 5 * 24 * 60 * 60
+const _sample = require('lodash/sample')
+
+const DEFAULT_WATER_ORDER_MIN_INTERVAL = 5 * 24 * 60 * 60
 
 const greetingMessages = ['^say (.*)', '^say']
 const waterOrderingMessages = ['^закажи воду$', '^order water$']
 const reactMessageKinds = ['direct_message', 'direct_mention']
 
+const respondWithOrderConfirmation = () => {
+  const possibleReplies = [
+    'Хорошо.',
+    'Ок.',
+    'Закажу.',
+    'Да, сэр :guardsman:!',
+    'Готово :white_check_mark:!',
+    'Good.',
+    'Ok.',
+    'I will!',
+    'Yes, sir! :guardsman:',
+    'Done :white_check_mark:.'
+  ]
 
-const passedEnoughTimeFromLastOrder = (createdAt) => {
-  const lastWaterOrder = new Date(createdAt)
+  _sample(possibleReplies)
+};
+
+const respondWithOrderSendingError = () => {
+  const possibleReplies = [
+    'Something went wrong and request hasn\'t been sent. :non-potable_water:',
+    'Произошла ошибка и запрос не отправился. :non-potable_water:'
+  ]
+
+  _sample(possibleReplies)
+};
+
+const respondWithTooMuchOrdersError = (lastWaterOrderCreatedAt) => {
+  const possibleReplies = [
+    `:non-potable_water:. You can't send water that often.\
+      Last time I ordered it ${lastWaterOrderCreatedAt}`,
+    `:non-potable_water:. Нельзя заказывать воду слишком часто.\
+      В последний раз я заказывала воду ${lastWaterOrderCreatedAt}`
+  ]
+
+  _sample(possibleReplies)
+};
+
+const passedEnoughTimeFromLastOrder = (lastWaterOrderCreatedAt) => {
+  const lastWaterOrder = new Date(lastWaterOrderCreatedAt)
   const currentDate = new Date()
   const minInterval = process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_MIN_INTERVAL
   const currentIntercal = (currentDate - lastWaterOrder) / 1000
@@ -23,13 +61,15 @@ const passedEnoughTimeFromLastOrder = (createdAt) => {
   return false
 };
 
-const makeOrder = () => new Promise((_resolve, reject) => {
-  if (passedEnoughTimeFromLastOrder()) {
+const makeOrder = (lastWaterOrderCreatedAt) => {
+  if (passedEnoughTimeFromLastOrder(lastWaterOrderCreatedAt)) {
     return sendEmail()
   } else {
-    return reject()
+    const message = respondWithTooMuchOrdersError(lastWaterOrderCreatedAt)
+
+    return Promise.reject(message)
   }
-})
+}
 
 const sendEmail = () => new Promise((resolve, reject) => {
   const message = {
@@ -55,9 +95,9 @@ const sendEmail = () => new Promise((resolve, reject) => {
 
   sendgrid.send(email, (error, result) => {
     if (error) {
-      reject(error)
+      reject(respondWithOrderConfirmation())
     } else {
-      resolve(result)
+      resolve(respondWithOrderSendingError())
     }
   });
 })
@@ -69,13 +109,16 @@ const register = (controller) => {
     mona.reply('Sorry, did you say ', `*${userInput}*`, '?')
   })
 
-  controller.hears(waterOrderingMessages, reactMessageKinds, (mona, message) => {
-    makeOrder()
-      .then(() => {
-        mona.reply('Done!')
+  controller.hears(waterOrderingMessages, reactMessageKinds, (mona) => {
+    // get date
+    const lastWaterOrderCreatedAt = ''
+    makeOrder(lastWaterOrderCreatedAt)
+      .then((message) => {
+        mona.reply(message)
+        // save date
       })
-      .catch(() => {
-        mona.reply('Ooops...')
+      .catch((message) => {
+        mona.reply(message)
       })
   })
 }
