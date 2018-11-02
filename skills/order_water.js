@@ -1,6 +1,7 @@
 const _sample = require('lodash/sample')
 
 const DEFAULT_WATER_ORDER_MIN_INTERVAL = 5 * 24 * 60 * 60
+const LAST_WATER_ORDER_DATE_KEY = 'water-order-last-date'
 
 const greetingMessages = ['^say (.*)', '^say']
 const waterOrderingMessages = ['^закажи воду$', '^order water$']
@@ -31,19 +32,19 @@ const respondWithOrderSendingError = () => {
   _sample(possibleReplies)
 };
 
-const respondWithTooMuchOrdersError = (lastWaterOrderCreatedAt) => {
+const respondWithTooMuchOrdersError = (lastWaterOrderDate) => {
   const possibleReplies = [
     `:non-potable_water:. You can't send water that often.\
-      Last time I ordered it ${lastWaterOrderCreatedAt}`,
+      Last time I ordered it ${lastWaterOrderDate}`,
     `:non-potable_water:. Нельзя заказывать воду слишком часто.\
-      В последний раз я заказывала воду ${lastWaterOrderCreatedAt}`
+      В последний раз я заказывала воду ${lastWaterOrderDate}`
   ]
 
   _sample(possibleReplies)
 };
 
-const passedEnoughTimeFromLastOrder = (lastWaterOrderCreatedAt) => {
-  const lastWaterOrder = new Date(lastWaterOrderCreatedAt)
+const passedEnoughTimeFromLastOrder = (lastWaterOrderDate) => {
+  const lastWaterOrder = new Date(lastWaterOrderDate)
   const currentDate = new Date()
   const minInterval = process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_MIN_INTERVAL
   const currentIntercal = (currentDate - lastWaterOrder) / 1000
@@ -60,11 +61,11 @@ const passedEnoughTimeFromLastOrder = (lastWaterOrderCreatedAt) => {
   return false
 };
 
-const makeOrder = (lastWaterOrderCreatedAt) => {
-  if (passedEnoughTimeFromLastOrder(lastWaterOrderCreatedAt)) {
+const makeOrder = (lastWaterOrderDate) => {
+  if (passedEnoughTimeFromLastOrder(lastWaterOrderDate)) {
     return sendEmail()
   } else {
-    const message = respondWithTooMuchOrdersError(lastWaterOrderCreatedAt)
+    const message = respondWithTooMuchOrdersError(lastWaterOrderDate)
 
     return Promise.reject(message)
   }
@@ -109,12 +110,15 @@ const register = (controller) => {
   })
 
   controller.hears(waterOrderingMessages, 'direct_message,direct_mention', (mona, message) => {
-    // get date
-    const lastWaterOrderCreatedAt = ''
-    makeOrder(lastWaterOrderCreatedAt)
+    const lastWaterOrderDate = controller.storage.brain.get(LAST_WATER_ORDER_DATE_KEY)
+
+    makeOrder(lastWaterOrderDate)
       .then((result) => {
         mona.reply(message, result)
-        // save date
+        controller.storage.brain.save({
+          id: LAST_WATER_ORDER_DATE_KEY,
+          value: new Date(),
+        })
       })
       .catch((result) => {
         mona.reply(message, result)

@@ -7,19 +7,19 @@
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-const env = require('node-env-file');
+const env = require('node-env-file')
 
-const Botkit = require('botkit');
-const redis = require('botkit-storage-redis');
+const Botkit = require('botkit')
+const redis = require('botkit-storage-redis')
 
 const nodeEnv = process.env.NODE_ENV || 'development'
 
 if (nodeEnv === 'development') {
-  env(__dirname + '/.env');
+  env(__dirname + '/.env')
 }
 
 const redisConfig = {
-
+  methods: ['brain'],
 }
 
 const bot_options = {
@@ -29,36 +29,36 @@ const bot_options = {
   studio_token: process.env.studio_token,
   studio_command_uri: process.env.studio_command_uri,
   storage: redis(redisConfig),
-};
+}
 
 // Create the Botkit controller, which controls all instances of the bot.
-const controller = Botkit.slackbot(bot_options);
+const controller = Botkit.slackbot(bot_options)
 
-controller.startTicking();
+controller.startTicking()
 
 // Set up an Express-powered webserver to expose oauth and webhook endpoints
-const webserver = require(__dirname + '/components/express_webserver.js')(controller);
+const webserver = require(__dirname + '/components/express_webserver.js')(controller)
 
-webserver.get('/', function(req, res){
+webserver.get('/', (req, res) => {
   res.render('index', {
     domain: req.get('host'),
     protocol: req.protocol,
-    glitch_domain:  process.env.PROJECT_DOMAIN,
-    layout: 'layouts/default'
-  });
+    glitch_domain: process.env.PROJECT_DOMAIN,
+    layout: 'layouts/default',
+  })
 })
 // Set up a simple storage backend for keeping a record of customers
 // who sign up for the app via the oauth
-require(__dirname + '/components/user_registration.js')(controller);
+require(__dirname + '/components/user_registration.js')(controller)
 
 // Send an onboarding message when a new team joins
-require(__dirname + '/components/onboarding.js')(controller);
+require(__dirname + '/components/onboarding.js')(controller)
 
 // enable advanced botkit studio metrics
-require('botkit-studio-metrics')(controller);
+require('botkit-studio-metrics')(controller)
 
-const normalizedPath = require("path").join(__dirname, "skills");
+const normalizedPath = require("path").join(__dirname, "skills")
 
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
-  require("./skills/" + file)(controller);
+  require("./skills/" + file)(controller)
 });
