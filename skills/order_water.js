@@ -103,7 +103,7 @@ const sendEmail = () => new Promise((resolve, reject) => {
   });
 })
 
-const register = async (controller) => {
+const register = (controller) => {
   const memory = new Memory(controller)
 
   controller.hears(greetingMessages, 'direct_message,direct_mention', (mona, message) => {
@@ -113,9 +113,9 @@ const register = async (controller) => {
   })
 
   controller.hears(waterOrderingMessages, 'direct_message,direct_mention', (mona, message) => {
-    const lastWaterOrderDate = await memory.get(LAST_WATER_ORDER_DATE_KEY)
-
-    makeOrder(lastWaterOrderDate)
+    memory
+      .get(LAST_WATER_ORDER_DATE_KEY)
+      .then(makeOrder)
       .then((result) => {
         mona.reply(message, result)
         memory.set(LAST_WATER_ORDER_DATE_KEY, new Date())
