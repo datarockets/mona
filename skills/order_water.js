@@ -107,8 +107,11 @@ const register = (controller) => {
     const userInput = message.match[1]
 
     controller.storage.brain.get('last-call-date', (_err, value) => {
-      mona.reply(message, `Sorry, did you say *${userInput}*?`)
-      mona.reply(message, `Last call was at ${new Date(value)}`)
+      console.log('>>>>>', value)
+      mona.reply(message, `
+        Sorry, did you say *${userInput}*?
+        Last call was at ${new Date(value)}
+      `)
     })
     
     controller.storage.brain.save({
