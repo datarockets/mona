@@ -104,7 +104,7 @@ const sendEmail = () => new Promise((resolve, reject) => {
 
 const register = (controller) => {
   controller.hears(greetingMessages, reactMessageKinds, (mona, message) => {
-    const [_, userInput] = message.match
+    const userInput = message.match[1]
 
     mona.reply('Sorry, did you say ', `*${userInput}*`, '?')
   })
