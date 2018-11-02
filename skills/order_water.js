@@ -103,7 +103,7 @@ const sendEmail = () => new Promise((resolve, reject) => {
   });
 })
 
-const register = (controller) => {
+const register = async (controller) => {
   const memory = new Memory(controller)
 
   controller.hears(greetingMessages, 'direct_message,direct_mention', (mona, message) => {
