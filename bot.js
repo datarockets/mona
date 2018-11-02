@@ -52,22 +52,27 @@ This bot demonstrates many of the core features of Botkit:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 var env = require('node-env-file');
+
+var Botkit = require('botkit');
+var redis = require('botkit-storage-redis');
+
 var nodeEnv = process.env.NODE_ENV || 'development'
 
 if (nodeEnv === 'development') {
   env(__dirname + '/.env');
 }
 
-var Botkit = require('botkit');
-var debug = require('debug')('botkit:main');
+const redisConfig = {
+
+}
 
 var bot_options = {
+    scopes: ['bot'],
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
-    // debug: true,
-    scopes: ['bot'],
     studio_token: process.env.studio_token,
-    studio_command_uri: process.env.studio_command_uri
+    studio_command_uri: process.env.studio_command_uri,
+    storage: redis(redisConfig),
 };
 
 // Use a mongo database if specified, otherwise store in a JSON file local to the app.
@@ -154,7 +159,6 @@ if (!process.env.clientId || !process.env.clientSecret) {
               }
           }).catch(function(err) {
               bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
-              debug('Botkit Studio: ', err);
           });
       });
   } else {
