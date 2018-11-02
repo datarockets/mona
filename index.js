@@ -83,47 +83,29 @@ controller.startTicking();
 // Set up an Express-powered webserver to expose oauth and webhook endpoints
 const webserver = require(__dirname + '/components/express_webserver.js')(controller);
 
-if (!process.env.clientId || !process.env.clientSecret) {
-  // Load in some helpers that make running Botkit on Glitch.com better
-  require(__dirname + '/components/plugin_glitch.js')(controller);
-
-  webserver.get('/', function(req, res){
-    res.render('installation', {
-      studio_enabled: controller.config.studio_token ? true : false,
-      domain: req.get('host'),
-      protocol: req.protocol,
-      glitch_domain:  process.env.PROJECT_DOMAIN,
-      layout: 'layouts/default'
-    });
-  })
-
-  const whereItsAt = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me/';
-  console.log('WARNING: This application is not fully configured to work with Slack. Please see instructions at ' + whereItsAt);
-} else {
-  webserver.get('/', function(req, res){
-    res.render('index', {
-      domain: req.get('host'),
-      protocol: req.protocol,
-      glitch_domain:  process.env.PROJECT_DOMAIN,
-      layout: 'layouts/default'
-    });
-  })
-  // Set up a simple storage backend for keeping a record of customers
-  // who sign up for the app via the oauth
-  require(__dirname + '/components/user_registration.js')(controller);
-
-  // Send an onboarding message when a new team joins
-  require(__dirname + '/components/onboarding.js')(controller);
-
-  // Load in some helpers that make running Botkit on Glitch.com better
-  require(__dirname + '/components/plugin_glitch.js')(controller);
-
-  // enable advanced botkit studio metrics
-  require('botkit-studio-metrics')(controller);
-
-  const normalizedPath = require("path").join(__dirname, "skills");
-
-  require("fs").readdirSync(normalizedPath).forEach(function(file) {
-    require("./skills/" + file)(controller);
+webserver.get('/', function(req, res){
+  res.render('index', {
+    domain: req.get('host'),
+    protocol: req.protocol,
+    glitch_domain:  process.env.PROJECT_DOMAIN,
+    layout: 'layouts/default'
   });
-}
+})
+// Set up a simple storage backend for keeping a record of customers
+// who sign up for the app via the oauth
+require(__dirname + '/components/user_registration.js')(controller);
+
+// Send an onboarding message when a new team joins
+require(__dirname + '/components/onboarding.js')(controller);
+
+// Load in some helpers that make running Botkit on Glitch.com better
+require(__dirname + '/components/plugin_glitch.js')(controller);
+
+// enable advanced botkit studio metrics
+require('botkit-studio-metrics')(controller);
+
+const normalizedPath = require("path").join(__dirname, "skills");
+
+require("fs").readdirSync(normalizedPath).forEach(function(file) {
+  require("./skills/" + file)(controller);
+});
