@@ -106,10 +106,9 @@ const register = (controller) => {
   controller.hears(greetingMessages, 'direct_message,direct_mention', (mona, message) => {
     const userInput = message.match[1]
 
-    controller.storage.brain.get('last-call-date', (_err, value) => {
-      console.log('>>>>>', value)
+    controller.storage.brain.get('last-call-date', (_err, { value }) => {
       mona.reply(message, `
-        Sorry, did you say *${userInput}*?
+        Sorry, did you say *${userInput}*? \n \
         Last call was at ${new Date(value)}
       `)
     })
