@@ -105,13 +105,12 @@ const sendEmail = () => new Promise((resolve, reject) => {
 const register = (controller) => {
   controller.hears(greetingMessages, 'direct_message,direct_mention', (mona, message) => {
     const userInput = message.match[1]
-    const lastCallDate = controller.storage.brain.get('last-call-date')
-    console.log(1, controller.storage.brain)
-    console.log(2, lastCallDate)
-    mona.reply(message, `Sorry, did you say *${userInput}*?`)
-    mona.reply(message, `Last call was at ${new Date(lastCallDate)}`)
+
+    controller.storage.brain.get('last-call-date', (_err, value) => {
+      mona.reply(message, `Sorry, did you say *${userInput}*?`)
+      mona.reply(message, `Last call was at ${new Date(value)}`)
+    })
     
-    console.log(3, controller.storage.brain.save)
     controller.storage.brain.save({
       id: 'last-call-date',
       value: new Date(),
