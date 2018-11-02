@@ -93,7 +93,7 @@ const sendEmail = () => new Promise((resolve, reject) => {
     },
   });
 
-  sendgrid.send(email, (error, result) => {
+  sendgrid.send(email, (error) => {
     if (error) {
       reject(respondWithOrderConfirmation())
     } else {
@@ -123,7 +123,7 @@ const register = (controller) => {
       })
       .catch((result) => {
         console.log('makeOrder:catch >>>>', message, result)
-        mona.reply(message, result)
+        mona.reply(message, 'Oops')
       })
   })
 }
