@@ -4,7 +4,6 @@ const DEFAULT_WATER_ORDER_MIN_INTERVAL = 5 * 24 * 60 * 60
 
 const greetingMessages = ['^say (.*)', '^say']
 const waterOrderingMessages = ['^закажи воду$', '^order water$']
-const reactMessageKinds = ['direct_message', 'direct_mention']
 
 const respondWithOrderConfirmation = () => {
   const possibleReplies = [
@@ -109,7 +108,7 @@ const register = (controller) => {
     mona.reply(message, `Sorry, did you say *${userInput}*?`)
   })
 
-  controller.hears(waterOrderingMessages, reactMessageKinds, (mona, message) => {
+  controller.hears(waterOrderingMessages, 'direct_message,direct_mention', (mona, message) => {
     // get date
     const lastWaterOrderCreatedAt = ''
     makeOrder(lastWaterOrderCreatedAt)
