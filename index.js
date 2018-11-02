@@ -51,12 +51,12 @@ This bot demonstrates many of the core features of Botkit:
     -> http://howdy.ai/botkit
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-var env = require('node-env-file');
+const env = require('node-env-file');
 
-var Botkit = require('botkit');
-var redis = require('botkit-storage-redis');
+const Botkit = require('botkit');
+const redis = require('botkit-storage-redis');
 
-var nodeEnv = process.env.NODE_ENV || 'development'
+const nodeEnv = process.env.NODE_ENV || 'development'
 
 if (nodeEnv === 'development') {
   env(__dirname + '/.env');
@@ -66,25 +66,24 @@ const redisConfig = {
 
 }
 
-var bot_options = {
-    scopes: ['bot'],
-    clientId: process.env.clientId,
-    clientSecret: process.env.clientSecret,
-    studio_token: process.env.studio_token,
-    studio_command_uri: process.env.studio_command_uri,
-    storage: redis(redisConfig),
+const bot_options = {
+  scopes: ['bot'],
+  clientId: process.env.clientId,
+  clientSecret: process.env.clientSecret,
+  studio_token: process.env.studio_token,
+  studio_command_uri: process.env.studio_command_uri,
+  storage: redis(redisConfig),
 };
 
 // Create the Botkit controller, which controls all instances of the bot.
-var controller = Botkit.slackbot(bot_options);
+const controller = Botkit.slackbot(bot_options);
 
 controller.startTicking();
 
 // Set up an Express-powered webserver to expose oauth and webhook endpoints
-var webserver = require(__dirname + '/components/express_webserver.js')(controller);
+const webserver = require(__dirname + '/components/express_webserver.js')(controller);
 
 if (!process.env.clientId || !process.env.clientSecret) {
-
   // Load in some helpers that make running Botkit on Glitch.com better
   require(__dirname + '/components/plugin_glitch.js')(controller);
 
@@ -98,10 +97,9 @@ if (!process.env.clientId || !process.env.clientSecret) {
     });
   })
 
-  var where_its_at = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me/';
+  const whereItsAt = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me/';
   console.log('WARNING: This application is not fully configured to work with Slack. Please see instructions at ' + where_its_at);
-}else {
-
+} else {
   webserver.get('/', function(req, res){
     res.render('index', {
       domain: req.get('host'),
@@ -123,7 +121,8 @@ if (!process.env.clientId || !process.env.clientSecret) {
   // enable advanced botkit studio metrics
   require('botkit-studio-metrics')(controller);
 
-  var normalizedPath = require("path").join(__dirname, "skills");
+  const normalizedPath = require("path").join(__dirname, "skills");
+
   require("fs").readdirSync(normalizedPath).forEach(function(file) {
     require("./skills/" + file)(controller);
   });
@@ -135,26 +134,26 @@ if (!process.env.clientId || !process.env.clientSecret) {
   // You can tie into the execution of the script using the functions
   // controller.studio.before, controller.studio.after and controller.studio.validate
   if (process.env.studio_token) {
-      controller.on('direct_message,direct_mention,mention', function(bot, message) {
-          controller.studio.runTrigger(bot, message.text, message.user, message.channel, message).then(function(convo) {
-              if (!convo) {
-                  // no trigger was matched
-                  // If you want your bot to respond to every message,
-                  // define a 'fallback' script in Botkit Studio
-                  // and uncomment the line below.
-                  // controller.studio.run(bot, 'fallback', message.user, message.channel);
-              } else {
-                  // set variables here that are needed for EVERY script
-                  // use controller.studio.before('script') to set variables specific to a script
-                  convo.setVar('current_time', new Date());
-              }
-          }).catch(function(err) {
-              bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
-          });
+    controller.on('direct_message,direct_mention,mention', function(bot, message) {
+      controller.studio.runTrigger(bot, message.text, message.user, message.channel, message).then(function(convo) {
+        if (!convo) {
+          // no trigger was matched
+          // If you want your bot to respond to every message,
+          // define a 'fallback' script in Botkit Studio
+          // and uncomment the line below.
+          // controller.studio.run(bot, 'fallback', message.user, message.channel);
+        } else {
+          // set variables here that are needed for EVERY script
+          // use controller.studio.before('script') to set variables specific to a script
+          convo.setVar('current_time', new Date());
+        }
+      }).catch(function(err) {
+        bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
       });
+    });
   } else {
-      console.log('~~~~~~~~~~');
-      console.log('NOTE: Botkit Studio functionality has not been enabled');
-      console.log('To enable, pass in a studio_token parameter with a token from https://studio.botkit.ai/');
+    console.log('~~~~~~~~~~');
+    console.log('NOTE: Botkit Studio functionality has not been enabled');
+    console.log('To enable, pass in a studio_token parameter with a token from https://studio.botkit.ai/');
   }
 }
