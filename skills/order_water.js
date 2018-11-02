@@ -105,16 +105,22 @@ const sendEmail = () => new Promise((resolve, reject) => {
 const register = (controller) => {
   controller.hears(greetingMessages, 'direct_message,direct_mention', (mona, message) => {
     const userInput = message.match[1]
+    const lastCallDate = controller.storage.brain.get('last-call-date')
 
     mona.reply(message, `Sorry, did you say *${userInput}*?`)
+    mona.reply(message, `Last call was at ${new Date(lastCallDate)}`)
+
+    controller.storage.brain.save({
+      id: 'last-call-date',
+      value: new Date(),
+    })
   })
 
   controller.hears(waterOrderingMessages, 'direct_message,direct_mention', (mona, message) => {
     const lastWaterOrderDate = controller.storage.brain.get(LAST_WATER_ORDER_DATE_KEY)
-    console.log(lastWaterOrderDate)
+
     makeOrder(lastWaterOrderDate)
       .then((result) => {
-        console.log('makeOrder:then >>>>', message, result)
         mona.reply(message, result)
         controller.storage.brain.save({
           id: LAST_WATER_ORDER_DATE_KEY,
@@ -122,8 +128,7 @@ const register = (controller) => {
         })
       })
       .catch((result) => {
-        console.log('makeOrder:catch >>>>', message, result)
-        mona.reply(message, 'Oops')
+        mona.reply(message, result)
       })
   })
 }
