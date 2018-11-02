@@ -19,6 +19,7 @@ if (nodeEnv === 'development') {
 }
 
 const redisConfig = {
+  url: process.env.REDISTOGO_URL,
   methods: ['brain'],
 }
 
