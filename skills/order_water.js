@@ -111,9 +111,10 @@ const register = (controller) => {
 
   controller.hears(waterOrderingMessages, 'direct_message,direct_mention', (mona, message) => {
     const lastWaterOrderDate = controller.storage.brain.get(LAST_WATER_ORDER_DATE_KEY)
-
+    console.log(lastWaterOrderDate)
     makeOrder(lastWaterOrderDate)
       .then((result) => {
+        console.log('makeOrder:then >>>>', message, result)
         mona.reply(message, result)
         controller.storage.brain.save({
           id: LAST_WATER_ORDER_DATE_KEY,
@@ -121,6 +122,7 @@ const register = (controller) => {
         })
       })
       .catch((result) => {
+        console.log('makeOrder:catch >>>>', message, result)
         mona.reply(message, result)
       })
   })
