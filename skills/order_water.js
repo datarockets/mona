@@ -103,10 +103,10 @@ const sendEmail = () => new Promise((resolve, reject) => {
 })
 
 const register = (controller) => {
-  controller.hears(greetingMessages, reactMessageKinds, (mona, message) => {
+  controller.hears(greetingMessages, 'direct_message,direct_mention', (mona, message) => {
     const userInput = message.match[1]
 
-    mona.reply(message, 'Sorry, did you say ', `*${userInput}*`, '?')
+    mona.reply(message, `Sorry, did you say *${userInput}*?`)
   })
 
   controller.hears(waterOrderingMessages, reactMessageKinds, (mona, message) => {
