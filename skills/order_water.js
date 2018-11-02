@@ -1,4 +1,5 @@
 const _sample = require('lodash/sample')
+const Memory = require('../lib/Memory')
 
 const DEFAULT_WATER_ORDER_MIN_INTERVAL = 5 * 24 * 60 * 60
 const LAST_WATER_ORDER_DATE_KEY = 'water-order-last-date'
@@ -103,32 +104,21 @@ const sendEmail = () => new Promise((resolve, reject) => {
 })
 
 const register = (controller) => {
+  const memory = new Memory(controller)
+
   controller.hears(greetingMessages, 'direct_message,direct_mention', (mona, message) => {
     const userInput = message.match[1]
 
-    controller.storage.brain.get('last-call-date', (_err, { value }) => {
-      mona.reply(message, `
-        Sorry, did you say *${userInput}*? \n \
-        Last call was at ${new Date(value)}
-      `)
-    })
-    
-    controller.storage.brain.save({
-      id: 'last-call-date',
-      value: new Date(),
-    })
+    mona.reply(message, `*${userInput}*`)
   })
 
   controller.hears(waterOrderingMessages, 'direct_message,direct_mention', (mona, message) => {
-    const lastWaterOrderDate = controller.storage.brain.get(LAST_WATER_ORDER_DATE_KEY)
+    const lastWaterOrderDate = await memory.get(LAST_WATER_ORDER_DATE_KEY)
 
     makeOrder(lastWaterOrderDate)
       .then((result) => {
         mona.reply(message, result)
-        controller.storage.brain.save({
-          id: LAST_WATER_ORDER_DATE_KEY,
-          value: new Date(),
-        })
+        memory.set(LAST_WATER_ORDER_DATE_KEY, new Date())
       })
       .catch((result) => {
         mona.reply(message, result)
