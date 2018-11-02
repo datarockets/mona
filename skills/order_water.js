@@ -106,19 +106,19 @@ const register = (controller) => {
   controller.hears(greetingMessages, reactMessageKinds, (mona, message) => {
     const userInput = message.match[1]
 
-    mona.reply('Sorry, did you say ', `*${userInput}*`, '?')
+    mona.reply(message, 'Sorry, did you say ', `*${userInput}*`, '?')
   })
 
-  controller.hears(waterOrderingMessages, reactMessageKinds, (mona) => {
+  controller.hears(waterOrderingMessages, reactMessageKinds, (mona, message) => {
     // get date
     const lastWaterOrderCreatedAt = ''
     makeOrder(lastWaterOrderCreatedAt)
-      .then((message) => {
-        mona.reply(message)
+      .then((result) => {
+        mona.reply(message, result)
         // save date
       })
-      .catch((message) => {
-        mona.reply(message)
+      .catch((result) => {
+        mona.reply(message, result)
       })
   })
 }
