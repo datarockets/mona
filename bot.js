@@ -53,7 +53,6 @@ This bot demonstrates many of the core features of Botkit:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 var env = require('node-env-file');
 var nodeEnv = process.env.NODE_ENV || 'development'
-console.log(process.env.NODE_ENV, nodeEnv)
 
 if (nodeEnv === 'development') {
   env(__dirname + '/.env');
