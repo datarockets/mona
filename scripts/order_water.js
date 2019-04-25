@@ -16,7 +16,9 @@
 //   WATER_ORDER_RECIPIENT_NAME
 //   WATER_ORDER_ADMIN_EMAIL
 //   WATER_ORDER_ADMIN_NAME
+//   WATER_ORDER_SUCCESS_WEBHOOK
 //   SENDGRID_WATER_ORDER_TEMPLATE
+const https = require('https');
 
 const DEFAULT_WATER_ORDER_INTERVAL = 5 * 24 * 60 * 60; // 5 days in seconds
 
@@ -49,6 +51,7 @@ const sendOrderToWaterDealer = (robot, successCallback, errorCallback) => {
       console.log(error);
       errorCallback();
     } else {
+      https.get(process.env.WATER_ORDER_SUCCESS_WEBHOOK);
       robot.brain.set('LastWaterOrderCreatedAt', new Date());
       successCallback();
     }
@@ -72,7 +75,7 @@ const respondWithOrderConfirmation = (response) => {
   const possibleReplies = ['Хорошо.', 'Ок.', 'Закажу.', 'Да, сэр :guardsman:', 'Готово :white_check_mark:.',
     'Good.', 'Ok.', 'I will!', 'Yes, sir! :guardsman:', 'Done :white_check_mark:.'];
   response.reply(response.random(possibleReplies));
-  
+
 };
 
 const respondWithOrderSendingError = (response) => {
