@@ -3,8 +3,34 @@
 //   If somebody in chat write appropriate query,
 //   mona will answer him a random response for this query.
 
-const greetings = ['Hello', 'Good morning', 'G\'day', '\^Hi\$', 
-  'Доброго утра', 'Доброе утро', 'Привет'];
+const incomingGreetings = [
+  'Hello',
+  'Good morning',
+  'G\'day',
+  '\^Hi\$',
+  'Morning',
+  'Hey',
+  'Wazzzup',
+];
+
+const responsesOnName = [
+  'Whazzzup bro?',
+  'How can I help?',
+  'Yeap?)',
+  'Mm?)',
+  "I'm here)",
+];
+
+const responsesOnGreeting = [
+  'Hey, dude!',
+  'Whatzzzup, bro :smiley:',
+  'Morning, bro :smiley:',
+  'Nice... :smiley:',
+  'Hello! :smiley:',
+  'Morning, bro :smiley:',
+  'Hi, how are you?',
+  'Hell ou',
+];
 
 const handlerCommunication = (robot, queries, answers) => {
   queries.forEach((query) => {
@@ -15,14 +41,10 @@ const handlerCommunication = (robot, queries, answers) => {
 };
 
 module.exports = (robot) => {
-  handlerCommunication(robot, ['\^@mona\$'], ['whazzzup bro?', 
-    'how can I help?', 'yeap?)', 'м?)', 'я тут)', 'yeap?)']
-  );
+  handlerCommunication(robot, ['\^@mona\$'], responsesOnName);
   handlerCommunication(
     robot,
-    greetings,
-    ['Hey, dude!', 'Whatzzzup, bro :smiley:', 'Morning, bro :smiley:',
-      'Доброе... :smiley:', 'Привет! :smiley:', 'И тебе! :smiley:',
-      'Morning, bro :smiley:', 'Привет! Как дела?']
+    incomingGreetings,
+    responsesOnGreeting,
   );
 };
