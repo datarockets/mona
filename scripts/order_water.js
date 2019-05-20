@@ -76,11 +76,12 @@ const respondWithOrderConfirmation = (response) => {
     'Got it.',
     'Ok.',
     'Going to order.',
-    'Yes, sir :guardsman:',
     'Ready :white_check_mark:.',
-    'Good.', 'Ok.', 'I will!',
-    'Yes, sir! :guardsman:',
+    'Good.',
+    'Ok.',
+    'I will!',
     'Done :white_check_mark:.',
+    'Yes!',
   ];
   response.reply(response.random(possibleReplies));
 };
@@ -102,7 +103,7 @@ const respondWithTooMuchOrdersError = (response, robot) => {
 
 const handlerCommunication = (robot, queries) => {
   queries.forEach((query) => {
-    robot.hear(new RegExp(`^${query}$`, 'i'), (response) => {
+    robot.hear(new RegExp(query, 'i'), (response) => {
       if (passedEnoughTimeFromLastOrder(robot)) {
         sendOrderToWaterDealer(
           robot,
@@ -120,16 +121,9 @@ const handlerCommunication = (robot, queries) => {
   });
 };
 
-const waterCommands = [
-  '@mona water',
-  '@mona order water',
-  '@mona order water, please',
-  '@mona, water',
-  '@mona, order water',
-  '@mona, order water, please',
-];
+const waterOrderQuery = /^(?=.*\bmona\b)(?=.*\border\b)(?=.*\bwater\b).*$/;
 
 // This one triggers ONLY on those phrases
 module.exports = (robot) => {
-  handlerCommunication(robot, waterCommands);
+  handlerCommunication(robot, [waterOrderQuery]);
 };

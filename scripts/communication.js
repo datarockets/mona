@@ -10,11 +10,10 @@ const incomingGreetings = [
   '\^Hi\$',
   'Morning',
   'Hey',
-  'Wazzzup',
 ];
 
 const responsesOnName = [
-  'Whazzzup bro?',
+  "I'm listening",
   'How can I help?',
   'Yeap?)',
   'Mm?)',
@@ -22,23 +21,22 @@ const responsesOnName = [
 ];
 
 const responsesOnGreeting = [
-  'Hey, dude!',
-  'Whatzzzup, bro :smiley:',
-  'Morning, bro :smiley:',
+  'Hey!',
+  'Morning, :smiley:',
   'Nice... :smiley:',
   'Hello! :smiley:',
-  'Morning, bro :smiley:',
+  'Morning, :smiley:',
   'Hi, how are you?',
-  'Hell ou',
 ];
 
 const cyrillicQuery = '[\u0400-\u04FF]+';
+
 
 const handlerCommunication = (robot, queries, answers) => {
   queries.forEach((query) => {
     robot.hear(new RegExp(query, 'i'), (response) => {
       if (query === cyrillicQuery) {
-        return response.send('Dude, uncool. Speak in English, please :slightly_smiling_face:');
+        return response.send("It's, uncool. Speak in English, please :slightly_smiling_face:");
       }
 
       return response.send(response.random(answers));
