@@ -91,4 +91,6 @@ repo.
 
 ## Deployment
 
-Mona deployed on heroku.
+Deployment is run automatically after merging changes to the master branch.
+
+Mona deployed on Heroku.
