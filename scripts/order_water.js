@@ -72,15 +72,24 @@ const passedEnoughTimeFromLastOrder = (robot) => {
 };
 
 const respondWithOrderConfirmation = (response) => {
-  const possibleReplies = ['Хорошо.', 'Ок.', 'Закажу.', 'Да, сэр :guardsman:', 'Готово :white_check_mark:.',
-    'Good.', 'Ok.', 'I will!', 'Yes, sir! :guardsman:', 'Done :white_check_mark:.'];
+  const possibleReplies = [
+    'Got it.',
+    'Ok.',
+    'Going to order.',
+    'Ready :white_check_mark:.',
+    'Good.',
+    'Ok.',
+    'I will!',
+    'Done :white_check_mark:.',
+    'Yes!',
+  ];
   response.reply(response.random(possibleReplies));
-
 };
 
 const respondWithOrderSendingError = (response) => {
-  const possibleReplies = ['Something went wrong and request hasn\'t been sent. :non-potable_water:',
-    'Произошла ошибка и запрос не отправился. :non-potable_water:'];
+  const possibleReplies = [
+    'Something went wrong and request hasn\'t been sent. :non-potable_water:',
+  ];
   response.reply(response.random(possibleReplies));
 };
 
@@ -88,15 +97,13 @@ const respondWithTooMuchOrdersError = (response, robot) => {
   const possibleReplies = [
     `:non-potable_water:. You can't send water that often.\
       Last time I ordered it ${robot.brain.get('LastWaterOrderCreatedAt')}`,
-    `:non-potable_water:. Нельзя заказывать воду слишком часто.\
-      В последний раз я заказывала воду ${robot.brain.get('LastWaterOrderCreatedAt')}`
   ];
   response.reply(response.random(possibleReplies));
 };
 
 const handlerCommunication = (robot, queries) => {
   queries.forEach((query) => {
-    robot.hear(new RegExp(`^${query}$`, 'i'), (response) => {
+    robot.hear(new RegExp(query, 'i'), (response) => {
       if (passedEnoughTimeFromLastOrder(robot)) {
         sendOrderToWaterDealer(
           robot,
@@ -105,7 +112,7 @@ const handlerCommunication = (robot, queries) => {
           },
           () => {
             respondWithOrderSendingError(response);
-          }
+          },
         );
       } else {
         respondWithTooMuchOrdersError(response, robot);
@@ -114,7 +121,9 @@ const handlerCommunication = (robot, queries) => {
   });
 };
 
+const waterOrderQuery = /^(?=.*\bmona\b)(?=.*\border\b)(?=.*\bwater\b).*$/;
+
 // This one triggers ONLY on those phrases
 module.exports = (robot) => {
-  handlerCommunication(robot, ['@mona закажи воду', '@mona order water']);
+  handlerCommunication(robot, [waterOrderQuery]);
 };
