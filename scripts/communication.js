@@ -29,18 +29,9 @@ const responsesOnGreeting = [
   'Hi, how are you?',
 ];
 
-const cyrillicQuery = '[\u0400-\u04FF]+';
-
-
 const handlerCommunication = (robot, queries, answers) => {
   queries.forEach((query) => {
-    robot.hear(new RegExp(query, 'i'), (response) => {
-      if (query === cyrillicQuery) {
-        return response.send("It's, uncool. Speak in English, please :slightly_smiling_face:");
-      }
-
-      return response.send(response.random(answers));
-    });
+    robot.hear(new RegExp(query, 'i'), response => response.send(response.random(answers)));
   });
 };
 
@@ -48,7 +39,7 @@ module.exports = (robot) => {
   handlerCommunication(robot, ['\^@mona\$'], responsesOnName);
   handlerCommunication(
     robot,
-    [...incomingGreetings, cyrillicQuery],
+    incomingGreetings,
     responsesOnGreeting,
   );
 };
