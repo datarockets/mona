@@ -4,10 +4,16 @@
   "private": true,
   "author": "dima.zhlobo@datarockets.com",
   "description": "A simple datarockets robot called Mona",
+  "scripts": {
+    "start": "node bot.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
-    "moment": "^2.13.0",
-    "moment-timezone": "^0.5.14",
-    "sendgrid": "^2.0.0"
+    "botbuilder-adapter-slack": "^1.0.2",
+    "botbuilder-storage-mongodb": "^0.9.5",
+    "botkit": "^4.0.1",
+    "botkit-plugin-cms": "^1.0.0",
+    "dotenv": "^7.0.0"
   },
   "engines": {
     "node": "4.8.4"
