@@ -81,14 +81,14 @@ const respondWithOrderConfirmation = (response) => {
     'Ok.',
     'I will!',
     'Done :white_check_mark:.',
-    'Yes!',
+    'Yes!'
   ];
   response.reply(response.random(possibleReplies));
 };
 
 const respondWithOrderSendingError = (response) => {
   const possibleReplies = [
-    'Something went wrong and request hasn\'t been sent. :non-potable_water:',
+    'Something went wrong and request hasn\'t been sent. :non-potable_water:'
   ];
   response.reply(response.random(possibleReplies));
 };
@@ -103,7 +103,7 @@ const respondWithTooMuchOrdersError = (response, robot) => {
 
 const handlerCommunication = (robot, queries) => {
   queries.forEach((query) => {
-    robot.hear(new RegExp(query, 'i'), (response) => {
+    robot.hear(new RegExp(`^${query}$`, 'i'), (response) => {
       if (passedEnoughTimeFromLastOrder(robot)) {
         sendOrderToWaterDealer(
           robot,
@@ -112,7 +112,7 @@ const handlerCommunication = (robot, queries) => {
           },
           () => {
             respondWithOrderSendingError(response);
-          },
+          }
         );
       } else {
         respondWithTooMuchOrdersError(response, robot);

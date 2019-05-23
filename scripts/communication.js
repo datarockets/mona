@@ -9,7 +9,7 @@ const incomingGreetings = [
   'G\'day',
   '\^Hi\$',
   'Morning',
-  'Hey',
+  'Hey'
 ];
 
 const responsesOnName = [
@@ -17,7 +17,7 @@ const responsesOnName = [
   'How can I help?',
   'Yeap?)',
   'Mm?)',
-  "I'm here)",
+  "I'm here)"
 ];
 
 const responsesOnGreeting = [
@@ -26,7 +26,7 @@ const responsesOnGreeting = [
   'Nice... :smiley:',
   'Hello! :smiley:',
   'Morning, :smiley:',
-  'Hi, how are you?',
+  'Hi, how are you?'
 ];
 
 const handlerCommunication = (robot, queries, answers) => {
@@ -40,6 +40,6 @@ module.exports = (robot) => {
   handlerCommunication(
     robot,
     incomingGreetings,
-    responsesOnGreeting,
+    responsesOnGreeting
   );
 };
