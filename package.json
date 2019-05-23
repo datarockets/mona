@@ -12,6 +12,7 @@
     "botbuilder-adapter-slack": "^1.0.2",
     "botbuilder-storage-mongodb": "^0.9.5",
     "botkit": "^4.0.1",
+    "botkit-mock": "^0.1.11",
     "botkit-plugin-cms": "^1.0.0",
     "dotenv": "^7.0.0"
   },
@@ -23,6 +24,7 @@
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0"
+    "eslint-plugin-react": "^7.7.0",
+    "mocha": "^6.1.4"
   }
 }

@@ -16,3 +16,13 @@ Then bot will be available in slack.
 Deployment is run automatically after merging changes to the master branch.
 
 Mona deployed on Heroku.
+
+## Testing
+
+We're using `mocha` with [botkit-mock](https://github.com/gratifyguy/botkit-mock) for testing.
+
+In order to run all specs, execute command bellow in the project's root folder:
+
+```
+./bin/mocha specs
+```
