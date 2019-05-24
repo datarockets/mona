@@ -1,16 +1,15 @@
-const assert = require('assert');
-const Botmock = require('botkit-mock');
+const assert = require('assert')
+const Botmock = require('botkit-mock')
 
-const greetingController = require('../features/greeting');
-const replies = require('../features/greeting/replies.js');
-
+const greetingController = require('../features/greeting')
+const replies = require('../features/greeting/replies.js')
 
 describe('Sample hears controller', () => {
   beforeEach(() => {
-    this.controller = Botmock({});
-    this.bot = this.controller.spawn({ type: 'slack' });
-    greetingController(this.controller);
-  });
+    this.controller = Botmock({})
+    this.bot = this.controller.spawn({ type: 'slack' })
+    greetingController(this.controller)
+  })
 
   it(
     'Should return any greeting if user types `hi`',
@@ -19,12 +18,7 @@ describe('Sample hears controller', () => {
         messages: [{
           text: 'hi', isAssertion: true,
         }],
-      }]).then((message) => {
-        assert.equal(
-          replies.filter(reply => reply === message.text).length > 0,
-          true,
-        );
-      });
+      }]).then(message => assert(replies.includes(message.text)))
     },
-  );
-});
+  )
+})

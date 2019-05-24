@@ -1,3 +1,3 @@
-const greetingController = require('./greeting/index');
+const greetingController = require('./greeting/index')
 
-module.exports = greetingController;
+module.exports = greetingController

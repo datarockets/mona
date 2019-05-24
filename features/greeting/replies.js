@@ -4,4 +4,4 @@ module.exports = [
   'Nice... :smiley:',
   'Hello! :smiley:',
   'Hi, how are you?',
-];
+]

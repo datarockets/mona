@@ -5,4 +5,4 @@ module.exports = [
   '\^Hi\$',
   'Morning',
   'Hey',
-];
+]
