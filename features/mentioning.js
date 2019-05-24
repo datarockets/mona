@@ -1,10 +1,4 @@
-const responsesOnMentioning = [
-  "I'm listening",
-  'How can I help?',
-  'Yeap? :smile:',
-  'Mm? :smile:',
-  "I'm here :smile:",
-];
+const responsesOnMentioning = require('./responses/mentioning');
 
 function getRandomElementFrom(array) {
   return array[Math.floor(Math.random() * array.length)];
