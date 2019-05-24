@@ -1,4 +1,4 @@
-const responsesOnName = [
+const responsesOnMentioning = [
   "I'm listening",
   'How can I help?',
   'Yeap? :smile:',
@@ -6,8 +6,12 @@ const responsesOnName = [
   "I'm here :smile:",
 ];
 
+function getRandomElementFrom(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 module.exports = (controller) => {
   controller.on('direct_mention', async (bot, message) => {
-    await bot.reply(message, responsesOnName[Math.floor(Math.random() * responsesOnName.length)]);
+    await bot.reply(message, getRandomElementFrom(responsesOnMentioning));
   });
 };
