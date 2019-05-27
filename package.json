@@ -19,7 +19,7 @@
     "sendgrid": "^2.0.0"
   },
   "engines": {
-    "node": "4.8.4"
+    "node": "12"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
