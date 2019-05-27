@@ -45,17 +45,17 @@ const sendOrderToWaterDealer = (robot, successCallback, errorCallback) => {
     },
   });
 
-  sendgrid.send(email, (error, result) => {
-    console.log(result);
-    if (error) {
-      console.log(error);
-      errorCallback();
-    } else {
-      https.get(process.env.WATER_ORDER_SUCCESS_WEBHOOK);
-      robot.brain.set('LastWaterOrderCreatedAt', new Date());
+  //sendgrid.send(email, (error, result) => {
+  //  console.log(result);
+  //  if (error) {
+  //    console.log(error);
+  //    errorCallback();
+  //  } else {
+  //    https.get(process.env.WATER_ORDER_SUCCESS_WEBHOOK);
+  //    robot.brain.set('LastWaterOrderCreatedAt', new Date());
       successCallback();
-    }
-  });
+  //  }
+  //});
 };
 
 const passedEnoughTimeFromLastOrder = (robot) => {
@@ -127,7 +127,7 @@ const handlerCommunication = (robot, queries) => {
   });
 };
 
-const waterOrderQuery = /^(?=.*\bmona\b)(?=.*\border\b)(?=.*\bwater\b).*$/;
+const waterOrderQuery = '(?=.*\bmona\b)(?=.*\border\b)(?=.*\bwater\b).*';
 
 // This one triggers ONLY on those phrases
 module.exports = (robot) => {
