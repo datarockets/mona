@@ -102,19 +102,25 @@ const respondWithTooMuchOrdersError = (response, robot) => {
 };
 
 const handlerCommunication = (robot, queries) => {
+  console.log('\n\n\n\n\ntest\n\n\n\n\n');
   queries.forEach((query) => {
+    console.log(query);
     robot.hear(new RegExp(`^${query}$`, 'i'), (response) => {
       if (passedEnoughTimeFromLastOrder(robot)) {
+        console.log('inside if');
         sendOrderToWaterDealer(
           robot,
           () => {
+            console.log('respondWithOrderConfirmation');
             respondWithOrderConfirmation(response);
           },
           () => {
+            console.log('respondWithOrderSendingError');
             respondWithOrderSendingError(response);
           }
         );
       } else {
+        console.log('inside else');
         respondWithTooMuchOrdersError(response, robot);
       }
     });
