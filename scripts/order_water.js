@@ -45,17 +45,17 @@ const sendOrderToWaterDealer = (robot, successCallback, errorCallback) => {
     },
   });
 
-  //sendgrid.send(email, (error, result) => {
-  //  console.log(result);
-  //  if (error) {
-  //    console.log(error);
-  //    errorCallback();
-  //  } else {
-  //    https.get(process.env.WATER_ORDER_SUCCESS_WEBHOOK);
-  //    robot.brain.set('LastWaterOrderCreatedAt', new Date());
+  sendgrid.send(email, (error, result) => {
+    console.log(result);
+    if (error) {
+      console.log(error);
+      errorCallback();
+    } else {
+      https.get(process.env.WATER_ORDER_SUCCESS_WEBHOOK);
+      robot.brain.set('LastWaterOrderCreatedAt', new Date());
       successCallback();
-  //  }
-  //});
+    }
+  });
 };
 
 const passedEnoughTimeFromLastOrder = (robot) => {
@@ -63,7 +63,7 @@ const passedEnoughTimeFromLastOrder = (robot) => {
   if (lastWaterOrder) {
     const currentDate = new Date();
     if ((currentDate - lastWaterOrder) / 1000 >
-    (process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_INTERVAL)) {
+      (process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_INTERVAL)) {
       return (true);
     }
     return (false);
@@ -81,14 +81,14 @@ const respondWithOrderConfirmation = (response) => {
     'Ok.',
     'I will!',
     'Done :white_check_mark:.',
-    'Yes!'
+    'Yes!',
   ];
   response.reply(response.random(possibleReplies));
 };
 
 const respondWithOrderSendingError = (response) => {
   const possibleReplies = [
-    'Something went wrong and request hasn\'t been sent. :non-potable_water:'
+    'Something went wrong and request hasn\'t been sent. :non-potable_water:',
   ];
   response.reply(response.random(possibleReplies));
 };
@@ -101,35 +101,27 @@ const respondWithTooMuchOrdersError = (response, robot) => {
   response.reply(response.random(possibleReplies));
 };
 
-const handlerCommunication = (robot, queries) => {
-  console.log('\n\n\n\n\ntest\n\n\n\n\n');
-  queries.forEach((query) => {
-    console.log(query);
-    robot.hear(new RegExp(`^${query}$`, 'i'), (response) => {
-      if (passedEnoughTimeFromLastOrder(robot)) {
-        console.log('inside if');
-        sendOrderToWaterDealer(
-          robot,
-          () => {
-            console.log('respondWithOrderConfirmation');
-            respondWithOrderConfirmation(response);
-          },
-          () => {
-            console.log('respondWithOrderSendingError');
-            respondWithOrderSendingError(response);
-          }
-        );
-      } else {
-        console.log('inside else');
-        respondWithTooMuchOrdersError(response, robot);
-      }
-    });
+const waterOrderQuery = /^(?=.*\bmona\b)(?=.*\border\b)(?=.*\bwater\b).*$/i;
+
+const handlerCommunication = (robot) => {
+  robot.hear(waterOrderQuery, (response) => {
+    if (passedEnoughTimeFromLastOrder(robot)) {
+      sendOrderToWaterDealer(
+        robot,
+        () => {
+          respondWithOrderConfirmation(response);
+        },
+        () => {
+          respondWithOrderSendingError(response);
+        },
+      );
+    } else {
+      respondWithTooMuchOrdersError(response, robot);
+    }
   });
 };
 
-const waterOrderQuery = '(?=.*\bmona\b)(?=.*\border\b)(?=.*\bwater\b).*';
-
 // This one triggers ONLY on those phrases
 module.exports = (robot) => {
-  handlerCommunication(robot, [waterOrderQuery]);
+  handlerCommunication(robot);
 };
