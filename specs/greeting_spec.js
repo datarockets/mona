@@ -21,4 +21,15 @@ describe('Sample hears controller', () => {
       }]).then(message => assert(replies.includes(message.text)))
     },
   )
+
+  it(
+    "Shouldn't return any greeting if user types `hi` in code block",
+    () => {
+      this.bot.usersInput([{
+        messages: [{
+          text: '`hi`', isAssertion: true,
+        }],
+      }]).then(message => assert(message.text.length === 0))
+    },
+  )
 })
