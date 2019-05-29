@@ -13,12 +13,12 @@ describe('Sample hears controller', () => {
 
   it(
     'Should return any greeting if user types `hi`',
-    () => {
+    () => (
       this.bot.usersInput([{
         messages: [{
           text: 'hi', isAssertion: true,
         }],
       }]).then(message => assert(replies.includes(message.text)))
-    },
+    ),
   )
 })
