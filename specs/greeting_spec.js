@@ -13,34 +13,28 @@ describe('Sample hears controller', () => {
 
   it(
     'Should return any greeting if user types `hi`',
-    () => {
-      this.bot.usersInput([{
-        messages: [{
-          text: 'hi', isAssertion: true,
-        }],
-      }]).then(message => assert(replies.includes(message.text)))
-    },
+    () => this.bot.usersInput([{
+      messages: [{
+        text: 'hi', isAssertion: true,
+      }],
+    }]).then(message => assert(replies.includes(message.text)))
   )
 
   it(
     "Shouldn't return any greeting if user types hi in one line code block",
-    () => (
-      this.bot.usersInput([{
-        messages: [{
-          text: '`hi`', isAssertion: true,
-        }],
-      }]).then(message => assert.deepEqual(message, {}))
-    ),
+    () =>this.bot.usersInput([{
+      messages: [{
+        text: '`hi`', isAssertion: true,
+      }],
+    }]).then(message => assert.deepEqual(message, {}))
   )
 
   it(
     "Shouldn't return any greeting if user types hi in multiline code block",
-    () => (
-      this.bot.usersInput([{
-        messages: [{
-          text: '```hi```', isAssertion: true,
-        }],
-      }]).then(message => assert.deepEqual(message, {}))
-    ),
+    () => this.bot.usersInput([{
+      messages: [{
+        text: '```hi```', isAssertion: true,
+      }],
+    }]).then(message => assert.deepEqual(message, {}))
   )
 })
