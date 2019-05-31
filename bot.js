@@ -17,6 +17,8 @@ const { MongoDbStorage } = require('botbuilder-storage-mongodb');
 // Load process.env values from .env file
 require('dotenv').config();
 
+const { removeCodeFromMessage } = require('./lib/middleware');
+
 let storage = null;
 if (process.env.MONGO_URI) {
     storage = mongoStorage = new MongoDbStorage({
@@ -117,6 +119,8 @@ controller.webserver.get('/install/auth', async (req, res) => {
         res.send(err.message);
     }
 });
+
+controller.middleware.ingest.use(removeCodeFromMessage);
 
 let tokenCache = {};
 let userCache = {};
