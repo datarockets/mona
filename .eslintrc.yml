@@ -1,1 +1,8 @@
 extends: "datarockets-base"
+
+rules:
+  no-param-reassign:
+    - error
+    - props: true
+      ignorePropertyModificationsFor:
+        - message
