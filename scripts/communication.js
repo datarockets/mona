@@ -31,7 +31,7 @@ const responsesOnGreeting = [
 
 const handlerCommunication = (robot, queries, answers) => {
   queries.forEach((query) => {
-    robot.hear(new RegExp(query, 'i'), response => response.send(response.random(answers)));
+    robot.hear(new RegExp(`\\b${query}\\b`, 'i'), response => response.send(response.random(answers)));
   });
 };
 
