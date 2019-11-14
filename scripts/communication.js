@@ -30,9 +30,10 @@ const responsesOnGreeting = [
 ];
 
 const handlerCommunication = (robot, queries, answers) => {
-  queries.forEach((query) => {
-    robot.hear(new RegExp(`\\b${query}\\b`, 'i'), response => response.send(response.random(answers)));
-  });
+  const matchKeys = queries.join('|');
+  const regexp = new RegExp(`\\b(${matchKeys})\\b`, 'i');
+
+  robot.hear(regexp, response => response.send(response.random(answers)));
 };
 
 module.exports = (robot) => {
