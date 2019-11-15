@@ -7,7 +7,7 @@ const incomingGreetings = [
   'Hello',
   'Good morning',
   'G\'day',
-  '\^Hi\$',
+  'Hi',
   'Morning',
   'Hey'
 ];
@@ -31,13 +31,13 @@ const responsesOnGreeting = [
 
 const handlerCommunication = (robot, queries, answers) => {
   const matchKeys = queries.join('|');
-  const regexp = new RegExp(`\\b(${matchKeys})\\b`, 'i');
+  const regexp = new RegExp(`(^|[^\\w@])(${matchKeys})\\b`, 'i');
 
   robot.hear(regexp, response => response.send(response.random(answers)));
 };
 
 module.exports = (robot) => {
-  handlerCommunication(robot, ['\^@mona\$'], responsesOnName);
+  handlerCommunication(robot, ['@mona'], responsesOnName);
   handlerCommunication(
     robot,
     incomingGreetings,
