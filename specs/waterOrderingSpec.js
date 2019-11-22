@@ -1,24 +1,30 @@
 const assert = require('assert')
-const Botmock = require('botkit-mock')
 
-const waterOrderingController = require('../features/waterOrdering')
+const { getBasicController, rewiremock } = require('./helpers')
+const { sendgridMock, httpsMock } = require('./mocks')
 const replies = require('../features/waterOrdering/replies.js')
+
+rewiremock('@sendgrid/mail').with(sendgridMock())
+rewiremock('https').callThrough().with(httpsMock())
+
+rewiremock.enable()
+const waterOrderingController = require('../features/waterOrdering')
+rewiremock.disable()
 
 describe('Water ordering controller', () => {
   beforeEach(() => {
-    this.controller = Botmock({})
-    this.bot = this.controller.spawn({ type: 'slack' })
+    this.controller = getBasicController()
     waterOrderingController(this.controller)
   })
 
-  it(
-    'Should return any confirmation if user types `mona order water`',
-    () => {
-      this.bot.usersInput([{
-        messages: [{
-          text: 'mona order water', isAssertion: true,
-        }],
-      }]).then(message => assert(replies.includes(message.text)))
-    },
+  it('returns any confirmation if user types `mona order water`', async () => {
+    await this.controller.usersInput([{
+      type: 'message',
+      channel: 'channel',
+      messages: [{
+        text: 'mona order water', isAssertion: true,
+      }],
+    }]).then(message => assert(replies.good.includes(message.text)))
+  },
   )
 })

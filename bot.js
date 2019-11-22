@@ -1,6 +1,6 @@
 //  __   __  ___        ___
-// |__) /  \  |  |__/ |  |  
-// |__) \__/  |  |  \ |  |  
+// |__) /  \  |  |__/ |  |
+// |__) \__/  |  |  \ |  |
 
 // This is the main file for the mona bot.
 
@@ -22,16 +22,15 @@ const { removeCodeFromMessage } = require('./lib/middleware');
 let storage = null;
 if (process.env.MONGO_URI) {
     storage = mongoStorage = new MongoDbStorage({
-        url : process.env.MONGO_URI,
+      url: process.env.MONGO_URI,
+      database: "Mona"
     });
 }
-
-
 
 const adapter = new SlackAdapter({
     // parameters used to secure webhook endpoint
     verificationToken: process.env.verificationToken,
-    clientSigningSecret: process.env.clientSigningSecret,  
+    clientSigningSecret: process.env.clientSigningSecret,
 
     // auth token for a single-team app
     botToken: process.env.botToken,
@@ -39,9 +38,9 @@ const adapter = new SlackAdapter({
     // credentials used to set up oauth for multi-team apps
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
-    scopes: ['bot'], 
+    scopes: ['bot'],
     redirectUri: process.env.redirectUri,
- 
+
     // functions required for retrieving team-specific info
     // for use in multi-team apps
     getTokenForTeam: getTokenForTeam,
@@ -127,11 +126,11 @@ let userCache = {};
 
 if (process.env.TOKENS) {
     tokenCache = JSON.parse(process.env.TOKENS);
-} 
+}
 
 if (process.env.USERS) {
     userCache = JSON.parse(process.env.USERS);
-} 
+}
 
 async function getTokenForTeam(teamId) {
     if (tokenCache[teamId]) {
