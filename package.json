@@ -9,10 +9,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "botbuilder-adapter-slack": "^1.0.2",
+    "botbuilder-adapter-slack": "^1.0.7",
     "botbuilder-storage-mongodb": "^0.9.5",
-    "botkit": "^4.0.1",
-    "botkit-mock": "^0.1.11",
+    "botkit": "^4.6.1",
+    "botkit-mock": "^4.0.0",
     "botkit-plugin-cms": "^1.0.0",
     "dotenv": "^7.0.0"
   },
