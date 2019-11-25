@@ -2,7 +2,7 @@ module.exports = [
   'Hello',
   'Good morning',
   'G\'day',
-  '\^Hi\$',
+  'Hi',
   'Morning',
   'Hey',
 ]
