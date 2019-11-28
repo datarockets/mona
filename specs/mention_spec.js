@@ -12,7 +12,7 @@ describe('Mention controller', () => {
     mentionController(this.controller)
   })
 
-  it('should return one of mention responds if user mentions bot', async () => {
+  it('returns one of mention responds if user mentions bot', async () => {
     await this.controller.usersInput([{
       type: 'direct_mention',
       channel: 'channel',
