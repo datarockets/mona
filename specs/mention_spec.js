@@ -1,10 +1,8 @@
-const { BotMock, SlackApiMock } = require('botkit-mock')
 const assert = require('assert')
 
 const { getBasicController } = require('./helpers')
 const mentionController = require('../features/mention.js')
 const replies = require('../features/mention/replies')
-const { removeCodeFromMessage } = require('../lib/middleware')
 
 describe('Mention controller', () => {
   beforeEach(() => {
