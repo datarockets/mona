@@ -1,4 +1,4 @@
-const { BotMock, SlackApiMock } = require('botkit-mock')
+const { BotMock } = require('botkit-mock')
 const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack');
 
 const { removeCodeFromMessage } = require('../../lib/middleware');
@@ -19,8 +19,6 @@ module.exports = () => {
   });
 
   controller.middleware.ingest.use(removeCodeFromMessage)
-
-  SlackApiMock.bindMockApi(controller)
 
   return controller
 }
