@@ -1,7 +1,6 @@
 const queries = require('./queries.js')
 const replies = require('./replies.js')
-
-const randomArrayItem = array => array[Math.floor(Math.random() * array.length)]
+const { randomArrayItem } = require('../../lib')
 
 module.exports = (controller) => {
   const matchKeys = queries.join('|')
