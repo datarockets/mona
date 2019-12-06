@@ -8,7 +8,7 @@ const { randomArrayItem } = require('../../lib')
 module.exports = (controller) => {
   controller.hears(
     queries,
-    ['message', 'direct_message'],
+    ['direct_mention'],
     async (bot, message) => {
       const passedEnoughTime = await passedEnoughTimeFromLastOrder(bot);
       if (passedEnoughTime) {

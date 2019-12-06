@@ -1,3 +1,3 @@
 module.exports = [
-  /^(?=.*\bmona\b)(?=.*\border\b)(?=.*\bwater\b).*$/,
+  /^(?=.*\border\b)(?=.*\bwater\b).*$/,
 ]
