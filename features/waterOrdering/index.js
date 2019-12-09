@@ -16,7 +16,7 @@ const tooMuchOrdersReplies = lastOrderTime => (
 sgMail.setApiKey(process.env.SENDGRID_KEY)
 
 const setLastWaterOrderCreatedAt = async (robot) => {
-  const { storage } = robot._controller
+  const { _controller: { storage } } = robot
   const storeItems = await storage.read(['LastWaterOrderCreatedAt'])
 
   storeItems.LastWaterOrderCreatedAt = { date: new Date(), eTag: '*' }
@@ -45,7 +45,7 @@ const sendOrderToWaterDealer = async (robot, successCallback, errorCallback) => 
 }
 
 const lastWaterOrderCreatedAt = async (robot) => {
-  const { storage } = robot._controller
+  const { _controller: { storage } } = robot
   const storeItems = await storage.read(['LastWaterOrderCreatedAt'])
 
   return storeItems.LastWaterOrderCreatedAt
@@ -53,21 +53,16 @@ const lastWaterOrderCreatedAt = async (robot) => {
     : null
 }
 
+const isEnoughTimePassed = (date) => {
+  const orderTimeInterval = process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_INTERVAL
+
+  return (new Date() - date) / 1000 > orderTimeInterval
+}
+
 const passedEnoughTimeFromLastOrder = async (robot) => {
   const lastWaterOrder = await lastWaterOrderCreatedAt(robot)
 
-  if (lastWaterOrder) {
-    const currentDate = new Date()
-
-    if ((currentDate - lastWaterOrder) / 1000
-      > (process.env.WATER_ORDER_MIN_INTERVAL || DEFAULT_WATER_ORDER_INTERVAL)) {
-      return (true)
-    }
-
-    return (false)
-  }
-
-  return (true)
+  return lastWaterOrder === null || isEnoughTimePassed(lastWaterOrder)
 }
 
 module.exports = async (controller) => {
