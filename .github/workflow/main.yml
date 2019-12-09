@@ -1,0 +1,15 @@
+name: Pull Request CI
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run specs
+        run: |
+          npm install
+          make test
