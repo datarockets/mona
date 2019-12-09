@@ -20,5 +20,5 @@ jobs:
       - name: Run ESLint
         run: |
           npm install
-          ./node_modules/.bin/eslint .
+          make eslint
 
