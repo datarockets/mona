@@ -20,14 +20,13 @@ describe('Water ordering controller', () => {
 
   it('returns any confirmation if user types `mona order water`', async () => {
     const { text } = await this.controller.usersInput([{
-      type: 'message',
+      type: 'direct_mention',
       channel: 'channel',
       messages: [{
         text: 'mona order water',
         isAssertion: true,
       }],
     }])
-
     assert(replies.good.includes(text))
   })
 })

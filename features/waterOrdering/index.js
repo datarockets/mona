@@ -70,7 +70,7 @@ const passedEnoughTimeFromLastOrder = async (robot) => {
   return (true)
 }
 
-module.exports = (controller) => {
+module.exports = async (controller) => {
   controller.hears(
     queries,
     ['direct_mention'],
