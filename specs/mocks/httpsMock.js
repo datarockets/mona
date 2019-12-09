@@ -1,7 +1,5 @@
-const httpsMock = () => {
-  return ({
-    get: async (url) => {}
-  })
-}
+const httpsMock = () => ({
+  get: async url => (url),
+})
 
 module.exports = httpsMock

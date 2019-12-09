@@ -1,8 +1,6 @@
-const sendgridMock = () => {
-  return ({
-    send: async (message) => {},
-    setApiKey: (key) => {}
-  })
-}
+const sendgridMock = () => ({
+  send: async message => (message),
+  setApiKey: key => (key),
+})
 
 module.exports = sendgridMock
