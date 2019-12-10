@@ -9,6 +9,7 @@ rewiremock('https').callThrough().with(httpsMock())
 
 rewiremock.enable()
 const waterOrderingController = require('../features/waterOrdering')
+
 rewiremock.disable()
 
 describe('Water ordering controller', () => {
@@ -18,13 +19,14 @@ describe('Water ordering controller', () => {
   })
 
   it('returns any confirmation if user types `mona order water`', async () => {
-    await this.controller.usersInput([{
-      type: 'message',
+    const { text } = await this.controller.usersInput([{
+      type: 'direct_mention',
       channel: 'channel',
       messages: [{
-        text: 'mona order water', isAssertion: true,
+        text: 'mona order water',
+        isAssertion: true,
       }],
-    }]).then(message => assert(replies.good.includes(message.text)))
-  },
-  )
+    }])
+    assert(replies.good.includes(text))
+  })
 })

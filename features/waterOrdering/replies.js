@@ -16,5 +16,5 @@ module.exports = {
   tooMuchOrdersError: [
     `:non-potable_water: You can't send water that often.
       Last time I ordered it {{lastWaterOrderCreatedAt}}`,
-  ]
+  ],
 }
