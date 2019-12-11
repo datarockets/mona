@@ -3,5 +3,5 @@ const sendgridMock = require('./sendgridMock')
 
 module.exports = {
   httpsMock,
-  sendgridMock
+  sendgridMock,
 }

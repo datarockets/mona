@@ -3,5 +3,5 @@ const rewiremock = require('./rewiremock')
 
 module.exports = {
   getBasicController,
-  rewiremock
+  rewiremock,
 }
