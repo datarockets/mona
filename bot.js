@@ -10,6 +10,7 @@ const { BotkitCMSHelper } = require('botkit-plugin-cms')
 const { MongoDbStorage } = require('botbuilder-storage-mongodb')
 const { removeCodeFromMessage } = require('./lib/middleware')
 const adapter = require('./adapter')
+const { tokenCache, userCache } = require('./cache')
 
 require('dotenv').config()
 

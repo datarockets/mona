@@ -1,8 +1,6 @@
 require('dotenv').config()
 const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack')
-
-const tokenCache = JSON.parse(process.env.TOKENS || '{}')
-const userCache = JSON.parse(process.env.USERS || '{}')
+const { tokenCache, userCache } = require('./cache')
 
 const getTokenForTeam = async (teamId) => {
   if (tokenCache[teamId]) {
