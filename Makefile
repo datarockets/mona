@@ -4,4 +4,4 @@ test:
 eslint:
 	node_modules/.bin/eslint .
 
-.PHONY: test eslint
+.PHONY: test
