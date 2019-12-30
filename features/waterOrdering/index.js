@@ -23,7 +23,7 @@ const setLastWaterOrderCreatedAt = async (robot) => {
   await storage.write(storeItems)
 }
 
-const sendOrderToWaterDealer = async (robot, successCallback, errorCallback) => {
+const sendOrderToWaterDealer = async (robot) => {
   const message = {
     to: process.env.WATER_ORDER_RECIPIENT_EMAIL,
     toname: process.env.WATER_ORDER_RECIPIENT_NAME,
@@ -34,14 +34,8 @@ const sendOrderToWaterDealer = async (robot, successCallback, errorCallback) => 
   }
 
   await sgMail.send(message)
-    .then(async () => {
-      https.get(process.env.WATER_ORDER_SUCCESS_WEBHOOK)
-      await setLastWaterOrderCreatedAt(robot)
-      await successCallback()
-    })
-    .catch(async () => {
-      await errorCallback()
-    })
+  https.get(process.env.WATER_ORDER_SUCCESS_WEBHOOK)
+  await setLastWaterOrderCreatedAt(robot)
 }
 
 const lastWaterOrderCreatedAt = async (robot) => {
@@ -67,28 +61,35 @@ const passedEnoughTimeFromLastOrder = async (robot) => {
 
 const withRespect = ({ text }) => text.toLowerCase().includes('please')
 
+const getResponsesList = async (bot, message) => {
+  const { good, sendingError, noRespect } = replies
+  const passedEnoughTime = await passedEnoughTimeFromLastOrder(bot)
+  const lastOrderTime = await lastWaterOrderCreatedAt(bot)
+
+  if (!withRespect(message)) {
+    return noRespect
+  }
+
+  if (passedEnoughTime) {
+    try {
+      await sendOrderToWaterDealer(bot)
+
+      return good
+    } catch (e) {
+      return sendingError
+    }
+  }
+
+  return tooMuchOrdersReplies(lastOrderTime)
+}
+
 module.exports = async (controller) => {
   controller.hears(
     queries,
     ['direct_mention'],
     async (bot, message) => {
-      const { good, sendingError, noRespect } = replies
-      const passedEnoughTime = await passedEnoughTimeFromLastOrder(bot)
-
-      if (withRespect(message)) {
-        if (passedEnoughTime) {
-          await sendOrderToWaterDealer(
-            bot,
-            async () => { await bot.reply(message, { text: randomArrayItem(good) }) },
-            async () => { await bot.reply(message, { text: randomArrayItem(sendingError) }) },
-          )
-        } else {
-          const lastOrderTime = await lastWaterOrderCreatedAt(bot)
-          await bot.reply(message, { text: randomArrayItem(tooMuchOrdersReplies(lastOrderTime)) })
-        }
-      } else {
-        await bot.reply(message, { text: randomArrayItem(noRespect) })
-      }
+      const repliesList = await getResponsesList(bot, message)
+      await bot.reply(message, { text: randomArrayItem(repliesList) })
     },
   )
 }
