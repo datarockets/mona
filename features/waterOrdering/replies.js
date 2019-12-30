@@ -10,6 +10,14 @@ module.exports = {
     'Done :white_check_mark:.',
     'Yes!',
   ],
+  noRespect: [
+    'Maybe "Please"? :grumpy:',
+    'You ask me for a service, but do it without respect? :godfather:',
+    'Actually, I deserve respect :dude:',
+    'How dare you not respect me? :accepted:',
+    'Water shall not pass!!! :not_pass:',
+    'Demand respect I :yoda:',
+  ],
   sendingError: [
     'Something went wrong and request hasn\'t been sent. :non-potable_water:',
   ],

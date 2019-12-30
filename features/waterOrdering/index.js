@@ -65,22 +65,29 @@ const passedEnoughTimeFromLastOrder = async (robot) => {
   return lastWaterOrder === null || isEnoughTimePassed(lastWaterOrder)
 }
 
+const withRespect = ({ text }) => text.toLowerCase().includes('please')
+
 module.exports = async (controller) => {
   controller.hears(
     queries,
     ['direct_mention'],
     async (bot, message) => {
+      const { good, sendingError, noRespect } = replies
       const passedEnoughTime = await passedEnoughTimeFromLastOrder(bot)
 
-      if (passedEnoughTime) {
-        await sendOrderToWaterDealer(
-          bot,
-          async () => { await bot.reply(message, { text: randomArrayItem(replies.good) }) },
-          async () => { await bot.reply(message, { text: randomArrayItem(replies.sendingError) }) },
-        )
+      if (withRespect(message)) {
+        if (passedEnoughTime) {
+          await sendOrderToWaterDealer(
+            bot,
+            async () => { await bot.reply(message, { text: randomArrayItem(good) }) },
+            async () => { await bot.reply(message, { text: randomArrayItem(sendingError) }) },
+          )
+        } else {
+          const lastOrderTime = await lastWaterOrderCreatedAt(bot)
+          await bot.reply(message, { text: randomArrayItem(tooMuchOrdersReplies(lastOrderTime)) })
+        }
       } else {
-        const lastOrderTime = await lastWaterOrderCreatedAt(bot)
-        await bot.reply(message, { text: randomArrayItem(tooMuchOrdersReplies(lastOrderTime)) })
+        await bot.reply(message, { text: randomArrayItem(noRespect) })
       }
     },
   )
