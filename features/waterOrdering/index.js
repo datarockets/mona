@@ -7,7 +7,7 @@ const { randomArrayItem } = require('../../lib')
 
 const DEFAULT_WATER_ORDER_INTERVAL = 5 * 24 * 60 * 60 // 5 days in seconds
 
-const tooMuchOrdersReplies = lastOrderTime => (
+const generateTooMuchOrdersReplies = lastOrderTime => (
   replies.tooMuchOrdersError.map(reply => (
     reply.replace('{{lastWaterOrderCreatedAt}}', lastOrderTime)
   ))
@@ -80,7 +80,7 @@ const getResponsesList = async (bot, message) => {
     }
   }
 
-  return tooMuchOrdersReplies(lastOrderTime)
+  return generateTooMuchOrdersReplies(lastOrderTime)
 }
 
 module.exports = async (controller) => {
