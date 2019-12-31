@@ -27,7 +27,7 @@ describe('Water ordering controller', () => {
         isAssertion: true,
       }],
     }])
-    assert(replies.noRespect.includes(text))
+    assert(replies.askRespect.includes(text))
   })
 
   it('returns any confirmation if user types "mona order water please"', async () => {
@@ -39,6 +39,6 @@ describe('Water ordering controller', () => {
         isAssertion: true,
       }],
     }])
-    assert(replies.good.includes(text))
+    assert(replies.confirm.includes(text))
   })
 })

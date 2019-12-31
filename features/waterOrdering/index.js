@@ -62,21 +62,21 @@ const passedEnoughTimeFromLastOrder = async (robot) => {
 const withRespect = ({ text }) => text.toLowerCase().includes('please')
 
 const getResponsesList = async (bot, message) => {
-  const { good, sendingError, noRespect } = replies
+  const { confirm, askRespect, requestError } = replies
   const passedEnoughTime = await passedEnoughTimeFromLastOrder(bot)
   const lastOrderTime = await lastWaterOrderCreatedAt(bot)
 
   if (!withRespect(message)) {
-    return noRespect
+    return askRespect
   }
 
   if (passedEnoughTime) {
     try {
       await sendOrderToWaterDealer(bot)
 
-      return good
-    } catch (e) {
-      return sendingError
+      return confirm
+    } catch (error) {
+      return requestError
     }
   }
 
