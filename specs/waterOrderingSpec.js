@@ -18,7 +18,7 @@ describe('Water ordering controller', () => {
     waterOrderingController(this.controller)
   })
 
-  it('declined order if no respect', async () => {
+  it('returns any phrases asking for respect if no respect', async () => {
     const { text } = await this.controller.usersInput([{
       type: 'direct_mention',
       channel: 'channel',
@@ -30,7 +30,7 @@ describe('Water ordering controller', () => {
     assert(replies.noRespect.includes(text))
   })
 
-  it('returns any confirmation if user types `mona order water please`', async () => {
+  it('returns any confirmation if user types "mona order water please"', async () => {
     const { text } = await this.controller.usersInput([{
       type: 'direct_mention',
       channel: 'channel',
