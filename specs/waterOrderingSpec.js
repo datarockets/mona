@@ -13,6 +13,8 @@ const waterOrderingController = require('../features/waterOrdering')
 rewiremock.disable()
 
 describe('Water ordering controller', () => {
+  const { askRespect, confirm } = replies
+
   beforeEach(() => {
     this.controller = getBasicController()
     waterOrderingController(this.controller)
@@ -27,7 +29,7 @@ describe('Water ordering controller', () => {
         isAssertion: true,
       }],
     }])
-    assert(replies.askRespect.includes(text))
+    assert(askRespect.some(reply => text.includes(reply)))
   })
 
   it('returns any confirmation if user types "mona order water please"', async () => {
@@ -39,7 +41,7 @@ describe('Water ordering controller', () => {
         isAssertion: true,
       }],
     }])
-    assert(replies.confirm.includes(text))
+    assert(confirm.includes(text))
   })
 
   it('returns any confirmation if user types "mona order water pls"', async () => {
@@ -51,7 +53,7 @@ describe('Water ordering controller', () => {
         isAssertion: true,
       }],
     }])
-    assert(replies.confirm.includes(text))
+    assert(confirm.includes(text))
   })
 
   it('returns any confirmation if user types "mona order water PLZ"', async () => {
@@ -63,6 +65,6 @@ describe('Water ordering controller', () => {
         isAssertion: true,
       }],
     }])
-    assert(replies.confirm.includes(text))
+    assert(confirm.includes(text))
   })
 })

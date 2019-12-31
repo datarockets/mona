@@ -13,6 +13,15 @@ const generateTooMuchOrdersReplies = lastOrderTime => (
   ))
 )
 
+const addRespectNotes = () => {
+  const { askRespect, respectNoteText } = replies
+
+  // I'm not sure how to properly concatenate note to reply to appear it in newline in Slack
+  // \n in Slack may not work
+  return askRespect.map(reply => `${reply}
+${respectNoteText}`)
+}
+
 sgMail.setApiKey(process.env.SENDGRID_KEY)
 
 const setLastWaterOrderCreatedAt = async (robot) => {
@@ -72,7 +81,7 @@ const getResponsesList = async (bot, message) => {
   const lastOrderTime = await lastWaterOrderCreatedAt(bot)
 
   if (!withRespect(message)) {
-    return askRespect
+    return addRespectNotes(askRespect)
   }
 
   if (passedEnoughTime) {

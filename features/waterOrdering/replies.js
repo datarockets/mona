@@ -18,6 +18,7 @@ module.exports = {
     'Water shall not pass!!! :not_pass:',
     'Demand respect I :yoda:',
   ],
+  respectNoteText: '_(you can show you respect with *please*, *pls* or *plz* at the end of message)_',
   requestError: [
     'Something went wrong and request hasn\'t been sent. :non-potable_water:',
   ],
