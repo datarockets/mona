@@ -41,4 +41,28 @@ describe('Water ordering controller', () => {
     }])
     assert(replies.confirm.includes(text))
   })
+
+  it('returns any confirmation if user types "mona order water pls"', async () => {
+    const { text } = await this.controller.usersInput([{
+      type: 'direct_mention',
+      channel: 'channel',
+      messages: [{
+        text: 'mona order water pls',
+        isAssertion: true,
+      }],
+    }])
+    assert(replies.confirm.includes(text))
+  })
+
+  it('returns any confirmation if user types "mona order water PLZ"', async () => {
+    const { text } = await this.controller.usersInput([{
+      type: 'direct_mention',
+      channel: 'channel',
+      messages: [{
+        text: 'mona order water PLZ',
+        isAssertion: true,
+      }],
+    }])
+    assert(replies.confirm.includes(text))
+  })
 })

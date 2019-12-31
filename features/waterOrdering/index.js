@@ -59,7 +59,12 @@ const passedEnoughTimeFromLastOrder = async (robot) => {
   return lastWaterOrder === null || isEnoughTimePassed(lastWaterOrder)
 }
 
-const withRespect = ({ text }) => text.toLowerCase().includes('please')
+const withRespect = ({ text }) => {
+  const respectWords = ['please', 'pls', 'plz']
+  const standartizedText = text.toLowerCase()
+
+  return respectWords.some(respectWord => standartizedText.includes(respectWord))
+}
 
 const getResponsesList = async (bot, message) => {
   const { confirm, askRespect, requestError } = replies
