@@ -11,7 +11,7 @@ module.exports = {
     'Yes!',
   ],
   askRespect: [
-    'Maybe "Please"? :grumpy:',
+    'Maybe "Please" :grumpy:',
     'You ask me for a service, but do it without respect? :godfather:',
     'Actually, I deserve respect :dude:',
     'How dare you not respect me? :accepted:',
