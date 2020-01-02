@@ -18,8 +18,7 @@ const addRespectNotes = () => {
 
   // I'm not sure how to properly concatenate note to reply to appear it in newline in Slack
   // \n in Slack may not work
-  return askRespect.map(reply => `${reply}
-${respectNoteText}`)
+  return askRespect.map(reply => `${reply}\n${respectNoteText}`)
 }
 
 sgMail.setApiKey(process.env.SENDGRID_KEY)
