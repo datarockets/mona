@@ -13,12 +13,14 @@ const waterOrderingController = require('../features/waterOrdering')
 rewiremock.disable()
 
 describe('Water ordering controller', () => {
+  const { askRespect, confirm } = replies
+
   beforeEach(() => {
     this.controller = getBasicController()
     waterOrderingController(this.controller)
   })
 
-  it('returns any confirmation if user types `mona order water`', async () => {
+  it('returns any phrases asking for respect if no respect', async () => {
     const { text } = await this.controller.usersInput([{
       type: 'direct_mention',
       channel: 'channel',
@@ -27,6 +29,42 @@ describe('Water ordering controller', () => {
         isAssertion: true,
       }],
     }])
-    assert(replies.good.includes(text))
+    assert(askRespect.some(reply => text.includes(reply)))
+  })
+
+  it('returns any confirmation if user types "mona order water please"', async () => {
+    const { text } = await this.controller.usersInput([{
+      type: 'direct_mention',
+      channel: 'channel',
+      messages: [{
+        text: 'mona order water please',
+        isAssertion: true,
+      }],
+    }])
+    assert(confirm.includes(text))
+  })
+
+  it('returns any confirmation if user types "mona order water pls"', async () => {
+    const { text } = await this.controller.usersInput([{
+      type: 'direct_mention',
+      channel: 'channel',
+      messages: [{
+        text: 'mona order water pls',
+        isAssertion: true,
+      }],
+    }])
+    assert(confirm.includes(text))
+  })
+
+  it('returns any confirmation if user types "mona order water PLZ"', async () => {
+    const { text } = await this.controller.usersInput([{
+      type: 'direct_mention',
+      channel: 'channel',
+      messages: [{
+        text: 'mona order water PLZ',
+        isAssertion: true,
+      }],
+    }])
+    assert(confirm.includes(text))
   })
 })

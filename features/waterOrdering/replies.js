@@ -1,5 +1,5 @@
 module.exports = {
-  good: [
+  confirm: [
     'Got it.',
     'Ok.',
     'Going to order.',
@@ -10,7 +10,16 @@ module.exports = {
     'Done :white_check_mark:.',
     'Yes!',
   ],
-  sendingError: [
+  askRespect: [
+    'Maybe "Please" :grumpy:',
+    'You ask me for a service, but do it without respect? :godfather:',
+    'Actually, I deserve respect :dude:',
+    'How dare you not respect me? :accepted:',
+    'Water shall not pass!!! :not_pass:',
+    'Demand respect I :yoda:',
+  ],
+  respectNoteText: '_(respectful requests include *please*, *pls* or *plz*)_',
+  requestError: [
     'Something went wrong and request hasn\'t been sent. :non-potable_water:',
   ],
   tooMuchOrdersError: [
