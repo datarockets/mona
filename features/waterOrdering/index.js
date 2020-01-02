@@ -16,8 +16,6 @@ const generateTooMuchOrdersReplies = lastOrderTime => (
 const addRespectNotes = () => {
   const { askRespect, respectNoteText } = replies
 
-  // I'm not sure how to properly concatenate note to reply to appear it in newline in Slack
-  // \n in Slack may not work
   return askRespect.map(reply => `${reply}\n${respectNoteText}`)
 }
 
