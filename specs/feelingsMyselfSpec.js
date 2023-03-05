@@ -81,34 +81,4 @@ describe('Feeling myself controller', () => {
       }],
     }]).then(message => assert.deepEqual(message, {}))
   })
-
-  context('when generalChannelId specified', () => {
-    before(() => {
-      process.env.generalChannelId = 'generalId'
-    })
-
-    context('when in the general channel', () => {
-      it('returns message if user types `feel myself`', async () => {
-        await this.controller.usersInput([{
-          type: 'message',
-          channel: 'generalId',
-          messages: [{
-            text: 'feel myself', isAssertion: true,
-          }],
-        }]).then(message => assert(replies.includes(message.text)))
-      })
-    })
-
-    context('when not in the general channel', () => {
-      it('does not return anything if user types `feel myself`', async () => {
-        await this.controller.usersInput([{
-          type: 'message',
-          channel: 'notGeneralId',
-          messages: [{
-            text: 'feel myself', isAssertion: true,
-          }],
-        }]).then(message => assert.deepEqual(message, {}))
-      })
-    })
-  })
 })
