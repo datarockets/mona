@@ -3,6 +3,7 @@ const assert = require('assert')
 const { getBasicController } = require('./helpers')
 const feelingMyself = require('../features/feelingMyself')
 const replies = require('../features/feelingMyself/replies.js')
+const pronouns = require('../features/feelingMyself/pronouns')
 
 describe('Feeling myself controller', () => {
   beforeEach(() => {
@@ -17,7 +18,27 @@ describe('Feeling myself controller', () => {
       messages: [{
         text: 'I feel myself', isAssertion: true,
       }],
-    }]).then(message => assert(replies.includes(message.text)))
+    }]).then(message => assert(replies(pronouns.my).includes(message.text)))
+  })
+
+  it('replies using the third person singular if user types `he feels himself badly`', async () => {
+    await this.controller.usersInput([{
+      type: 'message',
+      channel: 'channelId',
+      messages: [{
+        text: 'he feels himself badly', isAssertion: true,
+      }],
+    }]).then(message => assert(replies(pronouns.him).includes(message.text)))
+  })
+
+  it('replies using the third person plural if user types `them feel themselves badly`', async () => {
+    await this.controller.usersInput([{
+      type: 'message',
+      channel: 'channelId',
+      messages: [{
+        text: 'them feel themselves badly', isAssertion: true,
+      }],
+    }]).then(message => assert(replies(pronouns.them).includes(message.text)))
   })
 
   it('creates a thread on replying if user types `I feel myself`', async () => {
@@ -67,7 +88,7 @@ describe('Feeling myself controller', () => {
       messages: [{
         text: '<@UJNAP9LQN>, I feel myself bad', isAssertion: true,
       }],
-    }]).then(message => assert(replies.includes(message.text)))
+    }]).then(message => assert(replies(pronouns.my).includes(message.text)))
   })
 
   it('does not return anything in threads', async () => {

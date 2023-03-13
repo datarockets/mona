@@ -1,4 +1,5 @@
 const replies = require('./replies.js')
+const PRONOUN_DICTIONARY = require('./pronouns')
 const {
   randomArrayItem,
   messageFromAnyThread,
@@ -12,16 +13,20 @@ const shouldMessage = (message) => {
   return fromAllowableChannel && notFromThread
 }
 
-const REGEXP = /\bfeel(ing)? myself\b/ig
+const availablePronouns = Object.keys(PRONOUN_DICTIONARY)
+const REGEXP = new RegExp(`\\bfeel(?:s|ing)? (${availablePronouns.join('|')})sel(?:f|ves)\\b`, 'i')
 
 module.exports = (controller) => {
   controller.hears(
     REGEXP,
     ['message', 'direct_message'],
     async (bot, message) => {
-      if (shouldMessage(message)) {
+      const groups = message.text?.match(REGEXP) || []
+      const pronoun = groups[1]
+
+      if (shouldMessage(message) && pronoun) {
         await bot.replyInThread(message, {
-          text: randomArrayItem(replies),
+          text: randomArrayItem(replies(PRONOUN_DICTIONARY[pronoun])),
         })
       }
     },
