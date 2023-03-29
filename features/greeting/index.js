@@ -2,17 +2,15 @@ const queries = require('./queries.js')
 const replies = require('./replies.js')
 const {
   randomArrayItem,
-  messageFromChannels,
   messageFromAnyThread,
   messageHasMentions,
+  messageFromGeneralChannel,
 } = require('../../lib')
 
 const shouldGreet = (message) => {
   const notFromThread = !messageFromAnyThread(message)
   const noMentions = !messageHasMentions(message)
-  const fromAllowableChannel = process.env.generalChannelId
-    ? messageFromChannels(message, [process.env.generalChannelId])
-    : true
+  const fromAllowableChannel = messageFromGeneralChannel(message)
 
   return fromAllowableChannel && notFromThread && noMentions
 }
