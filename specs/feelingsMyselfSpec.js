@@ -38,7 +38,17 @@ describe('Feeling myself controller', () => {
       messages: [{
         text: 'them feel themselves badly', isAssertion: true,
       }],
-    }]).then(message => assert(replies(pronouns.them).includes(message.text)))
+    }]).then(message => assert(replies(pronouns.them, false).includes(message.text)))
+  })
+
+  it('replies using the to be if user types `I am feeling myself badly`', async () => {
+    await this.controller.usersInput([{
+      type: 'message',
+      channel: 'channelId',
+      messages: [{
+        text: 'I am feeling myself badly', isAssertion: true,
+      }],
+    }]).then(message => assert(replies(pronouns.my, true).includes(message.text)))
   })
 
   it('creates a thread on replying if user types `I feel myself`', async () => {

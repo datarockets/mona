@@ -14,7 +14,7 @@ const shouldMessage = (message) => {
 }
 
 const availablePronouns = Object.keys(PRONOUN_DICTIONARY)
-const REGEXP = new RegExp(`\\bfeel(?:s|ing)? (${availablePronouns.join('|')})sel(?:f|ves)\\b`, 'i')
+const REGEXP = new RegExp(`\\bfeel(s|ing)? (${availablePronouns.join('|')})sel(?:f|ves)\\b`, 'i')
 
 module.exports = (controller) => {
   controller.hears(
@@ -22,11 +22,12 @@ module.exports = (controller) => {
     ['message', 'direct_message'],
     async (bot, message) => {
       const groups = message.text?.match(REGEXP) || []
-      const pronoun = groups[1]
+      const verbEnd = groups[1]
+      const pronoun = groups[2]
 
       if (shouldMessage(message) && pronoun) {
         await bot.replyInThread(message, {
-          text: randomArrayItem(replies(PRONOUN_DICTIONARY[pronoun])),
+          text: randomArrayItem(replies(PRONOUN_DICTIONARY[pronoun], verbEnd === 'ing')),
         })
       }
     },
