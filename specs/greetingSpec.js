@@ -60,6 +60,16 @@ describe('Sample hears controller', () => {
     }]).then(message => assert.deepEqual(message, {}))
   })
 
+  it('does not return any greeting if slack group mentioned', async () => {
+    await this.controller.usersInput([{
+      type: 'message',
+      channel: 'channelId',
+      messages: [{
+        text: '<!here>, hey', isAssertion: true,
+      }],
+    }]).then(message => assert.deepEqual(message, {}))
+  })
+
   it('does not return any greeting in threads', async () => {
     await this.controller.usersInput([{
       type: 'message',
